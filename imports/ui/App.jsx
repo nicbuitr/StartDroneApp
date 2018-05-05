@@ -37,13 +37,8 @@ class App extends Component {
             pythonScriptPath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/startDroneRoutineA.py",
             ipMTC: "http://192.168.198.128:4000/m2m/applications/DroneSensor1/containers/zoneInfoContainer/contentInstances",
             droneIP: "192.168.42.1",
-            // droneIP: "speedtest.tele2.net",
-            // droneIP: "192.168.0.30",
             ftpFilePath: "/internal_000/Bebop_Drone/media/",
-            // ftpFilePath: "",
-            // ftpFilePath: "/dev_hdd0/game/BCUS98106GAMEDATA/",
             ftpFileName: "Bebop_Drone_2018-04-20T114925+0000_569EE3.jpg",
-            // ftpFileName: "ICON0.PNG",
             serverImageStorePath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/DronePictures/",
             numberOfPicsToTake: 2,
             baseColorRGB: [255, 255, 255]
@@ -332,6 +327,7 @@ class App extends Component {
                 <div className="col-md-12 text-center">
                     <img src="img/logo.png" className="inline-img-responsive" id="img-logo" alt="Start Drone App Logo"/>
                     <hr/>
+                    <label className='control-label' htmlFor='comments'>Python Script Path:</label>
                     <input className='form-control' type="text" ref="textInput" id="pythonScriptPath"  name="pythonScriptPath" placeholder="Type script path" value={this.state.pythonScriptPath} onChange={this.handleInputChange.bind(this)}/>
                     <input className='form-control' type="text" ref="textInput" id="droneIP"  name="droneIP" placeholder="Type drone IP" value={this.state.droneIP} onChange={this.handleInputChange.bind(this)}/>
                     <input className='form-control' type="text" ref="textInput" id="ftpFilePath"  name="ftpFilePath" placeholder="Type FTP FilePath" value={this.state.ftpFilePath} onChange={this.handleInputChange.bind(this)}/>
