@@ -8,7 +8,7 @@ import React, { Component, PropTypes } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import ReactDOMServer from 'react-dom/server';
-import { ParkingLots } from '../api/parking_lots.js';
+import { ParkingLots } from '../api/startDroneMethods.js';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import ParkingLot from './ParkingLot.jsx';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -330,7 +330,7 @@ class App extends Component {
               <header id="header" className="collapse in">      
                 <AccountsUIWrapper />
                 <div className="col-md-12 text-center">
-                    <img src="img/logo.png" className="inline-img-responsive" id="img-logo" alt="Parking Lots Map Logo"/>
+                    <img src="img/logo.png" className="inline-img-responsive" id="img-logo" alt="Start Drone App Logo"/>
                     <hr/>
                     <input className='form-control' type="text" ref="textInput" id="pythonScriptPath"  name="pythonScriptPath" placeholder="Type script path" value={this.state.pythonScriptPath} onChange={this.handleInputChange.bind(this)}/>
                     <input className='form-control' type="text" ref="textInput" id="droneIP"  name="droneIP" placeholder="Type drone IP" value={this.state.droneIP} onChange={this.handleInputChange.bind(this)}/>
