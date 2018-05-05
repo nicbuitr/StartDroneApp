@@ -1,0 +1,333 @@
+/* CSS declarations go here */
+body {
+  background: black url(/img/background.jpeg) fixed round !important;
+  font-family: Roboto !important;
+}
+  
+header {
+  background: rgb(195, 218, 237);
+  padding: 20px 15px 15px 15px;
+  position: relative;
+  border-bottom: #337ab7 solid 1px;
+}
+
+.inline-img-responsive {
+  display: inline;
+  max-width: 100%;
+}
+
+.footer {
+  padding: 1em;
+}
+
+/* Icon when the collapsible content is shown */
+.banner-chevron:after {
+  font-family: "Glyphicons Halflings";
+  content: "\e113";
+}
+/* Icon when the collapsible content is hidden */
+.banner-chevron.collapsed:after {
+  content: "\e114";
+}
+
+.banner-chevron{
+  width: 100%;
+}
+ 
+#login-buttons {
+  display: block;
+}
+
+.login-button {
+  background: #337ab7 !important;
+}
+
+#login-name-link {
+  color: #23527c;
+}
+
+#login-name-link:hover {
+  color: #337ab7;
+}
+ 
+h1 {
+  font-size: 2.5em;
+  margin: 0;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+ 
+form {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  position: relative;
+}
+ 
+.new-parkingLot input {
+  box-sizing: border-box;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding-right: 80px;
+  font-size: 1em;
+}
+ 
+.new-parkingLot input:focus{
+  outline: 0;
+}
+ 
+ul {
+  margin: 0;
+  padding: 0;
+  background: white;
+}
+ 
+.delete {
+  float: right;
+  font-weight: bold;
+  background: none;
+  font-size: 1em;
+  border: none;
+  position: relative;
+}
+ 
+li {
+  position: relative;
+  list-style: none;
+  padding: 15px;
+  border-bottom: #eee solid 1px;
+}
+ 
+li .text {
+  margin-left: 10px;
+}
+ 
+li.checked {
+  color: #888;
+}
+ 
+li.checked .text {
+  text-decoration: line-through;
+}
+ 
+li.private {
+  background: #eee;
+  border-color: #ddd;
+}
+ 
+header .hide-completed {
+
+}
+ 
+.toggle-private {
+  margin-left: 5px;
+}
+
+#map {
+  min-height: 500px;
+  min-width: 100%;
+}
+
+.popup-info {
+  line-height: 0px;
+}
+
+.popup-content {
+  overflow-y: auto;
+  text-align: center;
+  height: 368px;
+  min-width: 300px;
+}
+
+
+@media (max-width: 330px) {
+  li.tab-link {
+    padding: 5px;
+  }
+  .popup-content {
+    min-width: 205px;
+  }
+
+  iframe {
+    width: 220px;
+  }
+}
+
+.popup-iframe {
+  -webkit-animation: fadeEffect 1s;
+  animation: fadeEffect 1s;
+}
+
+@media (max-width: 600px) {
+  li {
+    padding: 12px 15px;
+  }
+ 
+  .search {
+    width: 150px;
+    clear: both;
+  }
+ 
+  .new-parkingLot input {
+    padding-bottom: 5px;
+  }
+}
+
+/* TAB MENU */
+/* Style the tab */
+.tabs {
+    text-align: center;
+    position:relative;
+    clear:both;
+    margin-bottom: 2em;
+}
+.tab {
+    display: none;
+}
+
+.tab:first-of-type {
+    display: block;
+}
+
+.tabs-link {
+    position: block;
+    top: -14px;
+    height: 20px;
+    left: -40px;
+}
+
+.tab-link {
+    color: black;
+    background:#eee;
+    display: inline-block;
+    padding:10px;
+    border:1px solid #ccc;
+    margin-left:-1px;
+    position:relative;
+    list-style-type: none;
+    left:1px;
+    top:1px;
+    transition: 0.3s;
+    cursor:pointer;
+}
+
+.tab-link:hover {
+    background-color: #ddd;
+    text-decoration: underline;
+}
+
+.tab-link:active {
+    background-color: #ccc;
+}
+
+.left-edge {
+    border-radius: 10px 0 0 10px;
+}
+
+.right-edge {
+    border-radius: 0 10px 10px 0;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: block;
+    padding: 0 1em;
+    -webkit-animation: fadeEffect 1s;
+    animation: fadeEffect 1s;
+    text-align: left;
+}
+
+.content {
+    overflow-y: auto;
+    background: white;
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid #ccc;
+}
+
+.tab:target {
+    display: block;
+}
+
+.amenity-row {
+  line-height:22px;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float:right;
+}
+
+.clear {
+  clear:both;
+  float:none;
+}
+
+.green {
+  color: green;
+}
+
+/* Fade in tabs */
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@media (min-width: 992px) {
+  .review-add-result {
+    padding: 0 20%;
+  }
+}
+
+.operation-success {
+  background-color: rgba(139, 195, 74, 0.25);
+}
+
+.operation-failed {
+  background-color: rgba(244, 67, 54, 0.25);
+}
+
+.operation-in-progress {
+  background-color: rgb(231, 232, 232);
+}
+
+.python-results {
+  background-color: #000000;
+  color: #ffffff;
+  border-style: inset;
+}
+
+.colored-btn {
+  display: block;
+  border-style: groove;
+}
+
+@media (max-width: 700px) {
+  .colored-btn {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 419px) {
+  .colored-btn {
+    display: inline;
+    font-size: 12px;
+  }
+}

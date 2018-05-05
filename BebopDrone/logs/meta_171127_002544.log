@@ -1,0 +1,5 @@
+['9_GetVideo.py']
+navdata: logs/navdata_171127_002544.bin
+cmd: logs/cmd_171127_002544.bin
+console: logs/console_171127_002544.txt
+now: datetime.datetime(2017, 11, 27, 0, 25, 44, 130825)

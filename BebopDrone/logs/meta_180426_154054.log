@@ -1,0 +1,5 @@
+['4_MoveSpeed.py']
+navdata: logs/navdata_180426_154054.bin
+cmd: logs/cmd_180426_154054.bin
+console: logs/console_180426_154054.txt
+now: datetime.datetime(2018, 4, 26, 15, 40, 54, 352000)
