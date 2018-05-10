@@ -5,26 +5,19 @@
 Requirements:
 
 For the Drone to work with Python libraries:
-- Anaconda that usually comes with Python:
+- [Anaconda](https://conda.io/docs/user-guide/install/index.html) that usually comes with Python.	
 
-	$ https://conda.io/docs/user-guide/install/index.html
-
-- If it doesn't come with it, install the latest version of Python 2.7 separately:
-
-	$ https://www.python.org/downloads/
+- If it doesn't come with it, install the latest version of [Python 2.7](https://www.python.org/downloads/) separately:
 
 For the Web App:
 
-- Meteor wich usually comes with Node.js from:
+- [Meteor](https://www.meteor.com/install) wich usually comes with Node.js.
 
-	$ https://www.meteor.com/install
-
-- If it doesn't come with it, Node.js separately(LTS version should be ok):
-
-	$ https://nodejs.org/en/download/
+- If it doesn't come with it, download [Node.js](https://nodejs.org/en/download/) separately(LTS version should be ok).
 
 Finally,
-Clone this repository, then run:
+
+Clone or Download this repository, then run:
 
     $ meteor npm install
 
