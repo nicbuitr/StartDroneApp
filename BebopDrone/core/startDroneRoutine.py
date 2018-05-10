@@ -22,46 +22,32 @@ def startDroneRoutine( drone ):
     altitude = 2 # mts
     dPsi = math.pi # 0 rad
     try:
-        print "Taking Off."
+        print "Battery:", drone.battery
+        drone.trim()
         drone.takeoff()
-        time.sleep(1)
+        time.sleep(3)
         print "Take Off Successfull"
 
-        drone.hover()
-        print "Flying To Altitude Of " + str(altitude)
-        drone.flyToAltitude(2, timeout=20, speed=100) 
-        time.sleep(3)
-      
-        print "Taking Picture."
         drone.takePicture()
-
-        drone.hover()
+        time.sleep(1)
+        print "Picture Taken."
         print "Rotating by " + str(dPsi)
         drone.moveBy( 0, 0, 0, dPsi)
-        print "Waiting " + str(3) +" seconds"
-        time.sleep(3)
-        print "Finished first rotation"
+        print "Waiting " + str(5) +" seconds"
+        time.sleep(5)
+        print "Finished first rotation"    
 
-        print "Taking Picture."
         drone.takePicture()
-
-        drone.hover()
+        time.sleep(1)
+        print "Picture Taken."
         print "Rotating by " + str(dPsi)
         drone.moveBy( 0, 0, 0, dPsi)
-        print "Waiting " + str(3) +" seconds"
-        time.sleep(3)
+        print "Waiting " + str(5) +" seconds"
+        time.sleep(5)
         print "Finished second rotation"
 
-        print "Starting Landing"
-        drone.hover()
-        print "Flying To Altitude Of 1.5"
-        drone.flyToAltitude(1.5, timeout=20, speed=50) 
-        time.sleep(3)    
-        
-        drone.hover()
         drone.land()
-        time.sleep(3)
-        print "Python Executed"
+
     except ManualControlException, e:
         print
         print "ManualControlException"
@@ -73,7 +59,8 @@ def startDroneRoutine( drone ):
 
 if __name__ == "__main__":
     drone = Bebop()
-    startDroneRoutine( drone )
+    # startDroneRoutine( drone )
+    print "Python Executed"
 
 # vim: expandtab sw=4 ts=4 
 

@@ -248,14 +248,11 @@ class Bebop:
         while self.time-startTime < duration:
             self.update()
 
-    def flyToAltitude( self, altitude, timeout=3.0 , speed=20):
-        print "Fly to altitude", altitude, "from", self.altitude, "speed", speed
+    def flyToAltitude( self, altitude, timeout=3.0 ):
+        print "Fly to altitude", altitude, "from", self.altitude
+        speed = 20 # 20%
         assert self.time is not None
         assert self.altitude is not None
-        assert self.altitude is not 0
-        # if speed is None or speed is 0 
-        #     speed = 20 # 20%
-        print "SPEED = " + str(speed)
         startTime = self.time
         if self.altitude > altitude:
             while self.altitude > altitude and self.time-startTime < timeout:

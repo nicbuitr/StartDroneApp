@@ -1,5 +1,0 @@
-['startDroneRoutine.py']
-navdata: logs/navdata_180503_153938.bin
-cmd: logs/cmd_180503_153938.bin
-console: logs/console_180503_153938.txt
-now: datetime.datetime(2018, 5, 3, 15, 39, 38, 86000)

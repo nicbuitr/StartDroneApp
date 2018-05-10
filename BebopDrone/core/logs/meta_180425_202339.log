@@ -1,5 +1,0 @@
-['demoA.py']
-navdata: logs/navdata_180425_202339.bin
-cmd: logs/cmd_180425_202339.bin
-console: logs/console_180425_202339.txt
-now: datetime.datetime(2018, 4, 25, 20, 23, 39, 579000)

@@ -21,11 +21,6 @@ from apyros.manual import myKbhit, ManualControlException
 
 if __name__ == "__main__":
     
-    drone.hover()
-    print"Flying To Altitude Of 1.5"
-    drone.flyToAltitude(1.5, timeout=20, speed=50) 
-    time.sleep(3)
-    
-    drone.hover()
+    drone = Bebop()
     drone.land()
     print "Python Executed"

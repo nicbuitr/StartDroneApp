@@ -34,7 +34,7 @@ class App extends Component {
             layer: null,
             latlng: null,
             filters: [],
-            pythonScriptPath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/startDroneRoutineA.py",
+            pythonScriptPath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/startDroneRoutine.py",
             ipMTC: "http://192.168.198.128:4000/m2m/applications/DroneSensor1/containers/zoneInfoContainer/contentInstances",
             droneIP: "192.168.42.1",
             ftpFilePath: "/internal_000/Bebop_Drone/media/",
@@ -195,17 +195,17 @@ class App extends Component {
             // Check connection to drone by checking FTP status
             document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Checking connection to drone... </div></strong></h4><img id="loading-gif" src="/img/drone.gif" className="inline-img-responsive" alt="Drone Gif"/></div></div>);
             document.getElementById('drone-pictures').innerHTML = '';
-            await sleep(1000);
             $('#drone-start-panel').scrollView();
+            // await sleep(1000);
 
-            // this.checkFTPConnection.set(await Meteor.callPromise('checkFTPConnection', this.state.droneIP));
+            this.checkFTPConnection.set(await Meteor.callPromise('checkFTPConnection', this.state.droneIP));
             res = (this.checkFTPConnection.get() === undefined)?'':this.checkFTPConnection.get();             
 
 
             // Execute Python script
             document.getElementById('operation-header').innerHTML = res + '<hr> Executing script, please wait...';
             document.getElementById('loading-gif').src = '/img/drone.gif';
-            await sleep(1000);
+            // await sleep(1000);
             $('#drone-start-panel').scrollView();
 
             this.result.set(await Meteor.callPromise('startDrone', this.state.pythonScriptPath));
@@ -217,7 +217,7 @@ class App extends Component {
             }
             
             // Display Python log and List FTP directories and files
-            // document.getElementById('operation-header').innerHTML = 'Python succesfully executed. Listing FTP Directories and Files...';
+            document.getElementById('operation-header').innerHTML = 'Python succesfully executed. Listing FTP Directories and Files...';
             document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div id="operation-div" class="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Python succesfully executed. <hr> Listing FTP Directories and Files...</div></strong></h4> <div class="python-results">'+rows+'</div></div></div>';
             await sleep(1000);
             $('#drone-start-panel').scrollView();

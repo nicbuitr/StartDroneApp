@@ -1,5 +1,0 @@
-['8_MoveAndReturn.py']
-navdata: logs/navdata_171128_084252.bin
-cmd: logs/cmd_171128_084252.bin
-console: logs/console_171128_084252.txt
-now: datetime.datetime(2017, 11, 28, 8, 42, 52, 231942)

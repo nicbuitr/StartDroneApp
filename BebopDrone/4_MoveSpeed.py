@@ -30,14 +30,14 @@ drone.hover()
 
 #drone.update( cmd=movePCMDCmd( active=True, roll=0, pitch=0, yaw=0, gaz=0 ) )
 #roll=left/right pitch= Forwards/Backwards yaw=rotation gaz=up/down
-drone.update( cmd=movePCMDCmd( True, speedR, speedP, speedY, speedG ) )
-time.sleep(3)
+# drone.update( cmd=movePCMDCmd( True, speedR, speedP, speedY, speedG ) )
+# time.sleep(3)
 
-#if just rotation or/and up-down movements, Flag as False to keep hovering
-drone.update( cmd=movePCMDCmd( False, 0, 0, -speedY, 0 ) )
-time.sleep(1)
-drone.hover()
-print "Stop movements"
+# #if just rotation or/and up-down movements, Flag as False to keep hovering
+# drone.update( cmd=movePCMDCmd( False, 0, 0, -speedY, 0 ) )
+# time.sleep(1)
+# drone.hover()
+# print "Stop movements"
 
 #Landing
 drone.land()

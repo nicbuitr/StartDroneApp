@@ -34,7 +34,7 @@ if (Meteor.isServer) {
                                 if(error){
                                     console.log('REJECTED ERROR');
                                     console.log(error);
-                                    RESOLVED(error);
+                                    reject(error);
                                 }
                                 else{
                                     console.log('RESOLVED RESULT');
@@ -52,10 +52,10 @@ if (Meteor.isServer) {
                 //PythonShell.run('C:/Users/NicoBuitrago/Dropbox/Uniandes/2018_10/Proyecto Grado/Tesis-Mario-Mariana-Carlos/BebopDrone/core/demo.py', function (err) {
                 var options = {
                   mode: 'text',
-                  //pythonPath: 'path/to/python',
-                  pythonOptions: ['-u'], // get print results in real-time
-                  //scriptPath: 'C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/',
-                  args: ['comment']
+                  // pythonPath: 'path/to/python',
+                  // pythonOptions: ['-u'], // get print results in real-time
+                  // scriptPath: 'C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/',
+                  // args: ['comment']
                 };
                 const rows = Promise.await(
                         PythonShell.run(pythonScriptPath, options, function (err, results) {
