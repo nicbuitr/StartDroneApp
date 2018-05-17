@@ -2,13 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import PopupInfoHeader from './PopupInfoHeader.jsx';
 import PopupStreetView from './PopupStreetView.jsx';
 import PopupBasicInfo from './PopupBasicInfo.jsx';
-import PopupRates from './PopupRates.jsx';
-import PopupAmenities from './PopupAmenities.jsx';
 import PopupTabMenu from './PopupTabMenu.jsx';
 
 
-// ParkingLot component - represents a single todo item
-export default class ParkingLot extends Component {
+// PossibleZone component - represents a single todo item
+export default class PossibleZone extends Component {
     constructor(props) {
         super(props);
     }
@@ -39,20 +37,6 @@ export default class ParkingLot extends Component {
                            <PopupBasicInfo featureProps={featureProps} />
                          </div>
                        </div>
-                       <div key={'rates_lot_'+feature._id} id={'rates_lot_'+feature._id} className="tab">
-                         <div className="content">
-                           <PopupInfoHeader featureProps={featureProps} />
-                           <hr/>
-                           <PopupRates featureProps={featureProps} />
-                          </div>
-                       </div>
-                       <div key={'amenities_lot_'+feature._id} id={'amenities_lot_'+feature._id} className="tab">
-                         <div className="content">
-                           <PopupInfoHeader featureProps={featureProps} />
-                           <hr/>
-                           <PopupAmenities feature={feature} />
-                           </div>
-                       </div>
                    </div>
         );}
         else{
@@ -78,9 +62,9 @@ export default class ParkingLot extends Component {
     }
 }
  
-ParkingLot.propTypes = {
-  // This component gets the parkingLot to display through a React prop.
+PossibleZone.propTypes = {
+  // This component gets the possibleZone to display through a React prop.
   // We can use propTypes to indicate it is required
-  //parkingLot: PropTypes.object.isRequired,
+  //possibleZone: PropTypes.object.isRequired,
   //showPrivateButton: React.PropTypes.bool.isRequired,
 };

@@ -35,23 +35,24 @@ class Central(NA):
     def _consumption_data(self, application, container, content):
         print "Got content at Central"
         for i in content:
-            print i
             match_percentage = i['match_percentage']
             lat = i['latitude']
             lon = i['longitude']
             drone_id = i['drone_id']
+            image = i['base64image']
             self.data.append(match_percentage)
-            if match_percentage > 60:
+            if match_percentage > 85:
                 data = {
                     "match_percentage": match_percentage,
                     "latitude": lat,
                     "longitude": lon,
-                    "drone_id": drone_id
+                    "drone_id": drone_id,
+                    "base64image": image
                 }
                 self.push_content(self.alertContainers[drone_id-1], data)
                 print "ALERT SENT - Possible Mining Zone detected at [Latitude, Longitude]: [",lat,",",lon, "] with a dominant color match  of", match_percentage, "% by Drone ", drone_id, "- information stored at container:", container.name
             else:
-                print "Zone OK - dominant color match of", match_percentage, "% - Drone", drone_id, "- Container:", container.name
+                print "Zone OK - dominant color match of", match_percentage, "% - Drone", drone_id, "at [Latitude, Longitude]: [",lat,",",lon, "]","- Container:", container.name
 
 
 app_instance = Central()

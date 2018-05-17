@@ -23,8 +23,9 @@ class Alert(DA):
             lat = i['latitude']
             lon = i['longitude']
             drone_id = i['drone_id']
+            base64image = i['base64image']
             self.data.append(match_percentage)
-            print "ALERT!!! - Possible Mining Zone detected at [Latitude, Longitude]: [",lat,",",lon,"] with a dominant color match of:", match_percentage, "% by Drone", drone_id
+            print "ALERT!!! - Possible Mining Zone detected at [Latitude, Longitude]: [",lat,",",lon,"] with a dominant color match of:", match_percentage, "% by Drone", drone_id, "Subscribe to this container to retrieve Base64 Image String"
 
 app_instance = Alert()
 gateway_ip= 'localhost:4000'

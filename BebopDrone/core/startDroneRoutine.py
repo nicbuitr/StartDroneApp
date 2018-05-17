@@ -58,7 +58,7 @@ def startDroneRoutine( drone ):
 
 
 if __name__ == "__main__":
-    drone = Bebop()
+    # drone = Bebop()
     # startDroneRoutine( drone )
     print "Python Executed"
 

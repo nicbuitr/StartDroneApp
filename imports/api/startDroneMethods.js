@@ -8,17 +8,18 @@ import fs from 'fs';
 import { HTTP } from 'meteor/http';
 import path from 'path';
      
-export const ParkingLots = new Mongo.Collection('parking_lots');
+export const PossibleZones = new Mongo.Collection('possible_zones');
 
 if (Meteor.isServer) {
       // This code only runs on the server
-    Meteor.publish('parkingLots', function parkingLotsPublication() {
-        return ParkingLots.find();
+    Meteor.publish('possibleZones', function possibleZonesPublication() {
+        return PossibleZones.find();
     });
 
     Meteor.methods({
             async startDrone(pythonScriptPath) {
-        
+                check(pythonScriptPath, String);
+
                 var options = {
                   mode: 'text',
                   // pythonPath: 'path/to/python',
@@ -33,7 +34,7 @@ if (Meteor.isServer) {
                         PythonShell.run(pythonScriptPath, options, function(error, result) {
                                 if(error){
                                     console.log('REJECTED ERROR');
-                                    console.log(error);
+                                    console.log(errpppor);
                                     reject(error);
                                 }
                                 else{
@@ -49,6 +50,8 @@ if (Meteor.isServer) {
                 return res;
             },
             async landDrone(pythonScriptPath) {
+                check(pythonScriptPath, String);
+
                 //PythonShell.run('C:/Users/NicoBuitrago/Dropbox/Uniandes/2018_10/Proyecto Grado/Tesis-Mario-Mariana-Carlos/BebopDrone/core/demo.py', function (err) {
                 var options = {
                   mode: 'text',
@@ -67,33 +70,44 @@ if (Meteor.isServer) {
                 return rows;
             },
             async checkFTPConnection(url) {
+                check(url, String);
+
                 //console.log('PATH: ' + path.resolve(__dirname, 'app/server'));
-                let res = new Promise(
-                    function(resolve, reject){
-                        console.log('Checking FTP Status.');                       
-                        var ftp = new Ftp();
-                        ftp.on('ready', function() {
-                            ftp.status(function(error, result) {
-                                if(error){
-                                    console.log('REJECTED FTP Status Check');
-                                    resolve(error);
-                                    console.log(error);
-                                }
-                                else{
-                                    console.log('RESOLVED FTP Status Check');
-                                    resolve(result);
-                                    console.log(result);
-                                }
-                              ftp.end();
+
+                    let res = new Promise(
+                        function(resolve, reject){
+                            console.log('Checking FTP Status.');                       
+                            var ftp = new Ftp();
+                            ftp.on('ready', function() {
+                                ftp.status(function(error, result) {
+                                    if(error){
+                                        console.log('REJECTED FTP Status Check');
+                                        reject(error);
+                                        console.log(error);
+                                    }
+                                    else{
+                                        console.log('RESOLVED FTP Status Check');
+                                        resolve(result);
+                                        console.log(result);
+                                    }
+                                  ftp.end();
+                                });
                             });
-                        });
-                        // connect to localhost:21 as anonymous 
-                        ftp.connect({host: url});
-                    }
-                );
+                            try {
+                                // connect to localhost:21 as anonymous 
+                                ftp.connect({host: url});
+                            }
+                            catch (e){
+                                console.log(e.message);
+                                res = e.message;
+                            }
+                        }
+                    );
                 return res;
             },
             async listFTPDirs(url, path) {
+                check(url, String);
+                check(path, String);
 
                 let res = new Promise(
                     function(resolve, reject){
@@ -123,6 +137,11 @@ if (Meteor.isServer) {
                 return res;
             },
             async getPicturesFTP(url, filePath, fileName, serverImageStorePath) {
+                check(url, String);
+                check(filePath, String);
+                check(fileName, String);
+                check(serverImageStorePath, String);
+
                 let res = new Promise(
                     function(resolve, reject){
                         console.log('Downloading FTP file.');                       
@@ -172,9 +191,11 @@ if (Meteor.isServer) {
                 let diffPctage = (pctDiffRed + pctDiffGreen + pctDiffBlue) / 3 * 100;
                 let matchPctage = 100 - diffPctage;
 
-                return matchPctage.toFixed(2);
+                return Number(matchPctage.toFixed(2));
             },
             async isURLAvailable(url) {
+                check(url, String);
+
                 let res = new Promise(
                     function(resolve, reject){
                         console.log('CHECKING URL AVAILABILITY');
@@ -204,15 +225,24 @@ if (Meteor.isServer) {
                 console.log('AVAILABILITY CHECKED');
                 return res;
             },
-            async postToMTC(url) {
+            async postToMTC(url, matchPctage, latlng, droneID, img) {
+                check(url, String);
+
                 let res = new Promise(
                     function(resolve, reject){
                         console.log('CHECKING URL AVAILABILITY');
                         HTTP.post(url, {
-                                    data: {"match_percentage": 62,
-                                            "latitude": 18,
-                                            "longitude": 18,
-                                            "drone_id": 1
+                                    // data: {"match_percentage": 99,
+                                    //         "latitude": 18,
+                                    //         "longitude": 18,
+                                    //         "drone_id": 5,
+                                    //         "base64image": "Base64ImageString"
+                                    // }
+                                    data: {"match_percentage": matchPctage,
+                                            "latitude": latlng.lng,
+                                            "longitude": latlng.lat,
+                                            "drone_id": droneID,
+                                            "base64image": img
                                     }
                                 }, function(error, result) {
                                 if(error){
