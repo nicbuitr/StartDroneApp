@@ -230,7 +230,7 @@ if (Meteor.isServer) {
                 console.log('AVAILABILITY CHECKED');
                 return res;
             },
-            async postToMTC(url, matchPctage, latlng, droneID, img) {
+            async postToMTC(url, minMatchPctage, matchPctage, latlng, droneID, img) {
                 check(url, String);
 
                 let res = new Promise(
@@ -243,7 +243,8 @@ if (Meteor.isServer) {
                                     //         "drone_id": 5,
                                     //         "base64image": "Base64ImageString"
                                     // }
-                                    data: {"match_percentage": matchPctage,
+                                    data: { "min_match_percentage": minMatchPctage,
+                                            "match_percentage": matchPctage,
                                             "latitude": latlng.lng,
                                             "longitude": latlng.lat,
                                             "drone_id": droneID,
@@ -274,6 +275,53 @@ if (Meteor.isServer) {
                 //console.log(res);
                 console.log('AVAILABILITY CHECKED');
                 return res;
+            },
+            insertPossibleZoneAlert(minMatchPctage, matchPctage, latlng, droneID, img) {
+                    check(latlng.lng, Number);
+                    check(latlng.lat, Number);
+                 
+                    // Make sure the user is logged in before inserting a PossibleZones
+                    if (! Meteor.userId()) {
+                        throw new Meteor.Error('not-authorized');
+                    }
+
+
+                    let possibleZoneToUpdate = PossibleZones.findOne({'geometry.coordinates': [latlng.lng, latlng.lat]});
+
+                    if (possibleZoneToUpdate) {
+                        PossibleZones.update(possibleZoneToUpdate._id, { $push: 
+                            { 
+                                pictures: {
+                                    min_match_percentage: minMatchPctage,
+                                    match_percentage: matchPctage,
+                                    drone_id: droneID,
+                                    base64image: img
+                                } 
+                            } });
+                    }
+                    else{
+                        PossibleZones.insert({          
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [latlng.lng, latlng.lat],
+                                heading: 213.62,
+                                pitch: 0,
+                                fov: 100
+                            },
+                            type: 'Feature',
+                            popupContent: 'This is a TEST Possible Zone',
+                            underConstruction: false,                        
+                            pictures: [{
+                                min_match_percentage: minMatchPctage,
+                                match_percentage: matchPctage,
+                                drone_id: droneID,
+                                base64image: img
+                            }],
+                            createdAt: new Date(),
+                            owner: Meteor.userId(),
+                            username: Meteor.user().username,
+                        }); 
+                    }                   
             },
     });
 }

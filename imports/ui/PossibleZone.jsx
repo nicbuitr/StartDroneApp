@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import PopupInfoHeader from './PopupInfoHeader.jsx';
 import PopupStreetView from './PopupStreetView.jsx';
-import PopupBasicInfo from './PopupBasicInfo.jsx';
+import PopupZonePictures from './PopupZonePictures.jsx';
 import PopupTabMenu from './PopupTabMenu.jsx';
 
 
@@ -13,49 +13,31 @@ export default class PossibleZone extends Component {
   
     render() {
         let feature = this.props.feature;
-        let featureProps = feature.properties;
-        let ret;
-        if (feature.properties && feature.properties.name) {
-            ret = (
-                    <div key={'popup_info_'+feature._id} className="popup-info">
-                      <div key={'initial_div_'+feature._id} id={'initial_div_'+feature._id} className="tab">
-                        <div className="content">
-                           <PopupInfoHeader featureProps={featureProps} />
-                         </div>
-                       </div>
-                      <div key={'sviframe_div_'+feature._id} id={'street_view_lot_'+feature._id} className="tab">
-                        <div className="content">
-                           <PopupInfoHeader featureProps={featureProps} />
-                           <hr/>
-                            <PopupStreetView feature={feature} />
-                         </div>
-                       </div>
-                       <div key={'info_lot_'+feature._id} id={'info_lot_'+feature._id} className="tab">
-                         <div className="content">
-                           <PopupInfoHeader featureProps={featureProps} />
-                           <hr/>
-                           <PopupBasicInfo featureProps={featureProps} />
-                         </div>
-                       </div>
-                   </div>
-        );}
-        else{
-            ret = (
-                   <div key={'popup_info_'+feature._id} className="popup-info">
-                      <div key={'sviframe_div_'+feature._id} id={'street_view_lot_'+feature._id} className="tab">
-                        <div className="content">
-                           <PopupInfoHeader featureProps={featureProps} />
-                           <hr/>
-                           <PopupStreetView feature={feature} />
-                         </div>
-                       </div>
-                   </div>
-        );}
         return (
                 <span>
                   <PopupTabMenu feature={feature} />
                   <div key={'popup_content_'+feature._id} id={'popup_content_'+feature._id} className='popup-content'>
-                    {ret}
+                    <div key={'popup_info_'+feature._id} className="popup-info">
+                      <div key={'initial_div_'+feature._id} id={'initial_div_'+feature._id} className="tab">
+                        <div className="content">
+                           <PopupInfoHeader feature={feature} />
+                         </div>
+                       </div>
+                       <div key={'pictures_zone_'+feature._id} id={'pictures_zone_'+feature._id} className="tab">
+                         <div className="content">
+                           <PopupInfoHeader feature={feature} />
+                           <hr/>
+                           <PopupZonePictures feature={feature} />
+                         </div>
+                       </div>                      
+                      <div key={'sviframe_div_'+feature._id} id={'street_view_'+feature._id} className="tab">
+                        <div className="content">
+                           <PopupInfoHeader feature={feature} />
+                           <hr/>
+                            <PopupStreetView feature={feature} />
+                         </div>
+                       </div>
+                   </div>
                   </div>
                 </span>
         );

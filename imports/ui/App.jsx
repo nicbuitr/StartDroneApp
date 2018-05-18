@@ -42,6 +42,7 @@ class App extends Component {
             serverImageStorePath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/DronePictures/",
             numberOfPicsToTake: 2,
             baseColorRGB: [255, 255, 255],
+            minMatchPctage: 85,
             ipMTC: "http://192.168.198.128:4000/m2m/applications/DroneSensor/containers/zoneInfoContainer/contentInstances",
             awaitTime: 3000,
             droneON: false,
@@ -126,8 +127,8 @@ class App extends Component {
         function onEachFeature(feature, layer) {
             var popupContent = '';
 
-            if (feature.properties && feature.properties.popupContent) {
-                popupContent += feature.properties.popupContent;
+            if (feature && feature.popupContent) {
+                popupContent += feature.popupContent;
             }
             popupContent = ReactDOMServer.renderToString(<PossibleZone key={'possible_zone_'+feature._id} feature={feature} />);
             layer.bindPopup(popupContent);
@@ -137,16 +138,16 @@ class App extends Component {
         L.geoJSON(this.props.possibleZones, {
 
             filter: function (feature, layer) {
-                if (feature.properties) {
+                if (feature) {
                     // If the property "underConstruction" exists and is true, return false (don't render features under construction)
-                    return feature.properties.underConstruction !== undefined ? !feature.properties.underConstruction : true;
+                    return feature.underConstruction !== undefined ? !feature.underConstruction : true;
                 }
                 return false;
             },
             onEachFeature: onEachFeature,
 
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, { title: feature.properties.name });
+                return L.marker(latlng, { title: feature.geometry.coordinates });
             }
         });
 
@@ -176,7 +177,7 @@ class App extends Component {
               state.droneIP = e.target.value;
             }
             else if(e.target.name === 'droneID'){
-              state.droneID = e.target.value;
+              state.droneID = Number(e.target.value);
             }
             else if(e.target.name === 'ftpFilePath'){
               state.ftpFilePath = e.target.value;
@@ -185,16 +186,19 @@ class App extends Component {
               state.serverImageStorePath = e.target.value;
             }
             else if(e.target.name === 'numberOfPicsToTake'){
-              state.numberOfPicsToTake = e.target.value;
+              state.numberOfPicsToTake = Number(e.target.value);
             }
             else if(e.target.name === 'baseColorRGB'){
               state.baseColorRGB = e.target.value.split(',');
+            }
+            else if(e.target.name === 'minMatchPctage'){
+              state.minMatchPctage = Number(e.target.value);
             }
             else if(e.target.name === 'ipMTC'){
               state.ipMTC = e.target.value;
             }
             else if(e.target.name === 'awaitTime'){
-              state.awaitTime = e.target.value;
+              state.awaitTime = Number(e.target.value);
             }
         }
         this.setState(state);
@@ -218,17 +222,19 @@ class App extends Component {
                         }
                     }
                     if (empty){
-                        inputs[i].style = 'background-color: rgb(255, 235, 235); border-color: red';
+                        inputs[i].style.backgroundColor = 'rgb(255, 235, 235)';
+                        inputs[i].style.borderColor = 'red';
                         inputs[i].focus();
                         alert("Please enter the required valid information");
                         return;
                     }
                     else {
                         if (inputs[i].id === 'baseColorRGB'){
-                            inputs[i].style = 'border-color: #ccc';
+                            inputs[i].style.borderColor =  '#ccc';
                         }
                         else{
-                            inputs[i].style = 'background-color: white; border-color: #ccc';   
+                            inputs[i].style.backgroundColor = 'white';
+                            inputs[i].style.borderColor = '#ccc';
                         }
                     }
                  }
@@ -387,9 +393,14 @@ class App extends Component {
                             $('#drone-start-panel').scrollView();
 
                             // POST TO MTC
-                            MTC_ON?this.postToMTC.set(await Meteor.callPromise('postToMTC', this.state.ipMTC, matchPctage, this.state.latlng, this.state.droneID, img.src)):'';
+                            MTC_ON?this.postToMTC.set(await Meteor.callPromise('postToMTC', this.state.ipMTC, this.state.minMatchPctage, matchPctage, this.state.latlng, this.state.droneID, img.src)):'';
                             res = (this.postToMTC.get() === undefined)?'':this.postToMTC.get();
-                            await sleep(awaitTime);                            
+                            await sleep(awaitTime);
+
+                            // Add to MongoDB Collection
+                            if (matchPctage > this.state.minMatchPctage){
+                                Meteor.call('insertPossibleZoneAlert', this.state.minMatchPctage, matchPctage, this.state.latlng, this.state.droneID, img.src);
+                            }
                         }
                     }
                 }
@@ -426,7 +437,7 @@ class App extends Component {
 
             // Execute Python script
             droneON?this.result.set(await Meteor.callPromise('landDrone', this.state.pythonScriptPath)):'';
-            res = (this.result.get() === undefined)?["Landing Drone", "Landing Off Successfull"]:this.result.get();
+            res = (this.result.get() === undefined)?["Landing Drone", "Landing Successfull"]:this.result.get();
             await sleep(awaitTime); 
             
             rows = "";
@@ -505,6 +516,12 @@ class App extends Component {
                                 </div>
                                 <div className="col-md-10">
                                     <input className='form-control' type="text" ref="textInput" id="baseColorRGB"  name="baseColorRGB" placeholder="Type baseColorRGB" value={this.state.baseColorRGB} onChange={this.handleInputChange.bind(this)} style={{backgroundColor: "rgb(" + this.state.baseColorRGB + ")"}} title="Base Color that will be compared to the dominant color of the pictures taken"/>
+                                </div>
+                                <div className="col-md-2">
+                                    <label className='control-label text-left' htmlFor='minMatchPctage'>Match % Threshold</label>
+                                </div>
+                                <div className="col-md-10">
+                                    <input className='form-control' type="number" ref="textInput" id="minMatchPctage"  name="minMatchPctage" placeholder="Type number of minimum match % threshold" value={this.state.minMatchPctage} onChange={this.handleInputChange.bind(this)} title="Minimum match % threshold to create a possible illegal mining zone alert"/>
                                 </div>
                                 <div className="col-md-2">
                                     <label className='control-label text-left' htmlFor='ipMTC'>MTC Container URL</label>

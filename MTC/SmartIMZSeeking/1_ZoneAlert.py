@@ -19,13 +19,14 @@ class Alert(DA):
     def _consumption_data(self, application, container, content):
         print "Got content at ZoneAlert"
         for i in content:
+            min_match_percentage = i['min_match_percentage']
             match_percentage = i['match_percentage']
             lat = i['latitude']
             lon = i['longitude']
             drone_id = i['drone_id']
             base64image = i['base64image']
             self.data.append(match_percentage)
-            print "ALERT!!! - Possible Mining Zone detected at [Latitude, Longitude]: [",lat,",",lon,"] with a dominant color match of:", match_percentage, "% by Drone", drone_id, "Subscribe to this container to retrieve Base64 Image String"
+            print "ALERT!!! - Possible Mining Zone detected at [Latitude, Longitude]: [",lat,",",lon,"] with a dominant color match of:", match_percentage, "% > ", min_match_percentage, "% by Drone", drone_id, "Subscribe to this container to retrieve Base64 Image String"
 
 app_instance = Alert()
 gateway_ip= 'localhost:4000'
