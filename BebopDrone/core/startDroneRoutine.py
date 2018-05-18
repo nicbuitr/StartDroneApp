@@ -58,8 +58,8 @@ if __name__ == "__main__":
         numberOfPicsToTake = sys.argv[1]
     
     print "Number of Pictures : " + numberOfPicsToTake
-    # drone = Bebop()
-    # startDroneRoutine( drone , float(numberOfPicsToTake))
+    drone = Bebop()
+    startDroneRoutine( drone , float(numberOfPicsToTake))
     print "Python Executed"
 
 # vim: expandtab sw=4 ts=4 
