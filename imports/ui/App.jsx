@@ -248,12 +248,17 @@ class App extends Component {
             let res = '';
             let rows = '';
 
+
+
             // Get current location
-            this.state.locateCtrl.start();
             let tries = 5;
+            document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div id="operation-div" class="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Attempting to get current location. <hr></div></strong></h4></div></div>';
+            $('#drone-start-panel').scrollView();
+            this.state.locateCtrl.start();
+
             while (!this.state.latlng && tries > 0){
                 await sleep(1000);
-                document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div id="operation-div" class="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Attempting to get current location <hr>' + tries + ' seconds left.</div></strong></h4></div></div>';
+                document.getElementById('operation-header').innerHTML = 'Attempting to get current location <hr>' + tries + ' seconds left.'
                 tries--;
             }
 
@@ -262,6 +267,8 @@ class App extends Component {
             // Check connection to drone by checking FTP status
             document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Checking connection to drone... </div></strong></h4><img id="loading-gif" src="/img/ToDroneSerial.gif" className="inline-img-responsive" alt="Drone Gif"/></div></div>);
             document.getElementById('drone-pictures').innerHTML = '';
+            document.getElementById('python-results').innerHTML = '';
+            document.getElementById('python-results').classList.remove('python-results');
             $('#drone-start-panel').scrollView();
             
 
@@ -274,17 +281,21 @@ class App extends Component {
             document.getElementById('loading-gif').src = '/img/drone.gif';
             $('#drone-start-panel').scrollView();
 
-            droneON?this.result.set(await Meteor.callPromise('startDrone', this.state.pythonScriptPath)):'';
-            res = (this.result.get() === undefined)?'':this.result.get();
+            droneON?this.result.set(await Meteor.callPromise('startDrone', this.state.pythonScriptPath, this.state.numberOfPicsToTake)):'';
+            res = (this.result.get() === undefined)?["Starting Drone", "Take Off Successfull", "Taking Picture 1", "Rotating 180 degrees", "Taking Picture 2", "Rotating 180 degrees", "Pictures Taken", "Landed Successfully", "Python Executed"]:this.result.get();
             await sleep(awaitTime); 
             rows = "";
              for (var i = 0; i < res.length; i++) {                    
-                rows += '<div class="row"><div class="col-xs-12">'+res[i]+'</div></div>';
+                rows += '<div class="python-line">> '+res[i]+'</div>';
             }
             
             // Display Python log and List FTP directories and files
             document.getElementById('operation-header').innerHTML = 'Python succesfully executed. Listing FTP Directories and Files...';
             document.getElementById('loading-gif').src = '/img/ToDroneSerial.gif';
+            if (rows.length > 0){
+                document.getElementById('python-results').classList.add('python-results');
+                document.getElementById('python-results').innerHTML = rows;
+            }
             // document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div id="operation-div" class="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Python succesfully executed. <hr> Listing FTP Directories and Files...</div></strong></h4> <div class="python-results">'+rows+'</div></div></div>';
             $('#drone-start-panel').scrollView();
 
@@ -369,7 +380,7 @@ class App extends Component {
                             await sleep(awaitTime);
                             
                             if (res.code != undefined){
-                                throw new Error("Couldn't connect to " + this.state.droneIP + " Error: " +res.code);
+                                throw new Error("Couldn't connect to " + this.state.ipMTC + " Error: " +res.code);
                             }
                             
                             // Posting to MTC.
@@ -498,6 +509,7 @@ class App extends Component {
                     <hr/>
                     <div id="drone-start-result" className="drone-start-result"></div>
                     <div id="drone-pictures" className="drone-pictures"></div>
+                    <div id="python-results"></div>
                 </div>           
                 {/**TODO Generar de forma dinámica los checkbox para filtrar */}  
                 <div className="row" style={{visibility: 'hidden'}}>

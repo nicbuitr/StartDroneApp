@@ -31,7 +31,7 @@ class MetaLog:
             if not os.path.exists("logs"):
                 os.mkdir("logs")
             self.filename = datetime.datetime.now().strftime("logs/meta_%y%m%d_%H%M%S.log")
-            sys.stderr.write( "METALOG: %s\n" % self.filename )
+            sys.stdout.write( "METALOG: %s\n" % self.filename )
             self.f = open( self.filename, "w" )
             self.f.write( str(sys.argv)+"\n" )
             self.f.flush()

@@ -17,7 +17,7 @@ if (Meteor.isServer) {
     });
 
     Meteor.methods({
-            async startDrone(pythonScriptPath) {
+            async startDrone(pythonScriptPath, numberOfPicsToTake) {
                 check(pythonScriptPath, String);
 
                 var options = {
@@ -25,7 +25,7 @@ if (Meteor.isServer) {
                   // pythonPath: 'path/to/python',
                   // pythonOptions: ['-u'], // get print results in real-time
                   // scriptPath: 'C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/',
-                  // args: ['comment']
+                  args: [numberOfPicsToTake]
                 };
 
                 let res = new Promise(
@@ -34,7 +34,7 @@ if (Meteor.isServer) {
                         PythonShell.run(pythonScriptPath, options, function(error, result) {
                                 if(error){
                                     console.log('REJECTED ERROR');
-                                    console.log(errpppor);
+                                    console.log(error);
                                     reject(error);
                                 }
                                 else{
@@ -73,36 +73,29 @@ if (Meteor.isServer) {
                 check(url, String);
 
                 //console.log('PATH: ' + path.resolve(__dirname, 'app/server'));
-
-                    let res = new Promise(
-                        function(resolve, reject){
-                            console.log('Checking FTP Status.');                       
-                            var ftp = new Ftp();
-                            ftp.on('ready', function() {
-                                ftp.status(function(error, result) {
-                                    if(error){
-                                        console.log('REJECTED FTP Status Check');
-                                        reject(error);
-                                        console.log(error);
-                                    }
-                                    else{
-                                        console.log('RESOLVED FTP Status Check');
-                                        resolve(result);
-                                        console.log(result);
-                                    }
-                                  ftp.end();
-                                });
+                let res = new Promise(
+                    function(resolve, reject){
+                        console.log('Checking FTP Status.');                       
+                        var ftp = new Ftp();
+                        ftp.on('ready', function() {
+                            ftp.status(function(error, result) {
+                                if(error){
+                                    console.log('REJECTED FTP Status Check');
+                                    resolve(error);
+                                    console.log(error);
+                                }
+                                else{
+                                    console.log('RESOLVED FTP Status Check');
+                                    resolve(result);
+                                    console.log(result);
+                                }
+                              ftp.end();
                             });
-                            try {
-                                // connect to localhost:21 as anonymous 
-                                ftp.connect({host: url});
-                            }
-                            catch (e){
-                                console.log(e.message);
-                                res = e.message;
-                            }
-                        }
-                    );
+                        });
+                        // connect to localhost:21 as anonymous 
+                        ftp.connect({host: url});
+                    }
+                );
                 return res;
             },
             async listFTPDirs(url, path) {
@@ -203,7 +196,7 @@ if (Meteor.isServer) {
                                 if(error){
                                     console.log('REJECTED ERROR');
                                     console.log(error);
-                                    resolve(error);
+                                    reject(error);
                                 }
                                 else{
                                     console.log('RESOLVED RESULT');

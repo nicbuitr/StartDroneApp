@@ -331,3 +331,11 @@ header .hide-completed {
     font-size: 12px;
   }
 }
+
+.python-line {
+    margin: 0px;
+}
+
+.python-line:hover {
+    background-color: #555555;
+}
