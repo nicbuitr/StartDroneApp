@@ -35,7 +35,7 @@ class App extends Component {
             latlng: null,
             filters: [],
             locateCtrl: null,
-            pythonScriptPath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/startDroneRoutine.py",
+            pythonScriptPath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/",
             droneIP: "192.168.42.1",
             droneID: 1,
             ftpFilePath: "/internal_000/Bebop_Drone/media/",
@@ -296,7 +296,6 @@ class App extends Component {
                 document.getElementById('python-results').classList.add('python-results');
                 document.getElementById('python-results').innerHTML = rows;
             }
-            // document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div id="operation-div" class="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Python succesfully executed. <hr> Listing FTP Directories and Files...</div></strong></h4> <div class="python-results">'+rows+'</div></div></div>';
             $('#drone-start-panel').scrollView();
 
 
@@ -409,8 +408,49 @@ class App extends Component {
         }
     }
 
-    landDrone(event) {
+    async landDrone(event) {
+        try{
+            this.result = new ReactiveVar();
+            this.latestError = new ReactiveVar();
+            let droneON = this.state.droneON;
+            let awaitTime = this.state.awaitTime;
+            let res = '';
+            let rows = '';
 
+            // Check connection to drone by checking FTP status
+            document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Executing script, please wait...</div></strong></h4><img id="loading-gif" src="/img/ToDroneSerial.gif" className="inline-img-responsive" alt="Drone Gif"/></div></div>);
+            document.getElementById('drone-pictures').innerHTML = '';
+            document.getElementById('python-results').innerHTML = '';
+            document.getElementById('python-results').classList.remove('python-results');
+            $('#drone-start-panel').scrollView();
+
+            // Execute Python script
+            droneON?this.result.set(await Meteor.callPromise('landDrone', this.state.pythonScriptPath)):'';
+            res = (this.result.get() === undefined)?["Landing Drone", "Landing Off Successfull"]:this.result.get();
+            await sleep(awaitTime); 
+            
+            rows = "";
+             for (var i = 0; i < res.length; i++) {                    
+                rows += '<div class="python-line">> '+res[i]+'</div>';
+            }
+            
+            // Display Python log and List FTP directories and files
+            document.getElementById('operation-header').innerHTML = 'Python succesfully executed. Listing FTP Directories and Files...';
+            document.getElementById('loading-gif').src = '/img/ToDroneSerial.gif';
+            if (rows.length > 0){
+                document.getElementById('python-results').classList.add('python-results');
+                document.getElementById('python-results').innerHTML = rows;
+            }
+            $('#drone-start-panel').scrollView();
+
+            // // EXECUTION FINISHED
+            document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div class="operation-success panel-body text-center"><h4><strong>EXECUTION FINISHED.</strong></h4></div></div>';
+            $('#drone-start-panel').scrollView();            
+        } 
+        catch (e){
+            this.latestError.set(e.message);
+            document.getElementById('drone-start-result').innerHTML = '<div id=\"drone-start-result\" class=\"drone-start-result\"><div class=\"panel panel-default\"><div class=\"operation-failed panel-body text-center\"><h4><strong> Something went wrong <hr/>' + e.message + '</strong></h4></div></div></div>';
+        }
     }
 
     render() {

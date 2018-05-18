@@ -31,7 +31,7 @@ if (Meteor.isServer) {
                 let res = new Promise(
                     function(resolve, reject){
                         console.log('EXECUTING PYTHON');
-                        PythonShell.run(pythonScriptPath, options, function(error, result) {
+                        PythonShell.run(pythonScriptPath+'startDroneRoutine.py', options, function(error, result) {
                                 if(error){
                                     console.log('REJECTED ERROR');
                                     console.log(error);
@@ -52,22 +52,34 @@ if (Meteor.isServer) {
             async landDrone(pythonScriptPath) {
                 check(pythonScriptPath, String);
 
-                //PythonShell.run('C:/Users/NicoBuitrago/Dropbox/Uniandes/2018_10/Proyecto Grado/Tesis-Mario-Mariana-Carlos/BebopDrone/core/demo.py', function (err) {
                 var options = {
                   mode: 'text',
                   // pythonPath: 'path/to/python',
                   // pythonOptions: ['-u'], // get print results in real-time
                   // scriptPath: 'C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/',
-                  // args: ['comment']
+                  // args: [numberOfPicsToTake]
                 };
-                const rows = Promise.await(
-                        PythonShell.run(pythonScriptPath, options, function (err, results) {
-                          if (err) throw err;
-                          // results is an array consisting of messages collected during execution
-                          console.log('results: %j', results);
-                        })
-                    );
-                return rows;
+
+                let res = new Promise(
+                    function(resolve, reject){
+                        console.log('EXECUTING PYTHON');
+                        PythonShell.run(pythonScriptPath + 'landDrone.py', options, function(error, result) {
+                                if(error){
+                                    console.log('REJECTED ERROR');
+                                    console.log(error);
+                                    reject(error);
+                                }
+                                else{
+                                    console.log('RESOLVED RESULT');
+                                    console.log(result);
+                                    resolve(result);
+                                }
+                            });
+                    }
+                );
+                console.log(res);
+                console.log('SCRIPT EXECUTED');
+                return res;
             },
             async checkFTPConnection(url) {
                 check(url, String);

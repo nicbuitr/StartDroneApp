@@ -21,6 +21,8 @@ from apyros.manual import myKbhit, ManualControlException
 
 if __name__ == "__main__":
     
-    drone = Bebop()
-    drone.land()
+    # drone = Bebop()
+    # drone.land()
+    print "drone = Bebop()"
+    print "drone.land()"
     print "Python Executed"
