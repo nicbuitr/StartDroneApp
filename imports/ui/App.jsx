@@ -268,7 +268,9 @@ class App extends Component {
                 tries--;
             }
 
-            !this.state.latlng?this.state.latlng = {lat: 4.6011612, lng:-74.0656423}:"";
+            this.state.locateCtrl.stop();
+
+            !this.state.latlng?this.state.latlng = {lat: 4.6015798, lng:-74.066401}:"";
 
             // Check connection to drone by checking FTP status
             document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Checking connection to drone... </div></strong></h4><img id="loading-gif" src="/img/ToDroneSerial.gif" className="inline-img-responsive" alt="Drone Gif"/></div></div>);
@@ -500,7 +502,7 @@ class App extends Component {
                                     <input className='form-control' type="text" ref="textInput" id="ftpFilePath"  name="ftpFilePath" placeholder="Type FTP FilePath" value={this.state.ftpFilePath} onChange={this.handleInputChange.bind(this)} title="Path to the drone folder that contains the pictures taken"/>
                                 </div>
                                 <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='serverImageStorePath'>Server Storage Path</label>
+                                    <label className='control-label text-left' htmlFor='serverImageStorePath'>Image Storage Path</label>
                                 </div>
                                 <div className="col-md-10">
                                     <input className='form-control' type="text" ref="textInput" id="serverImageStorePath"  name="serverImageStorePath" placeholder="Type FTP serverImageStorePath" value={this.state.serverImageStorePath} onChange={this.handleInputChange.bind(this)} title="Path to the server folder that will store the pictures transferred from the drone"/>
