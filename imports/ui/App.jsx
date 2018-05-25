@@ -257,7 +257,7 @@ class App extends Component {
 
 
             // Get current location
-            let tries = 5;
+            let tries = 3;
             document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div id="operation-div" class="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Attempting to get current location. <hr></div></strong></h4></div></div>';
             $('#drone-start-panel').scrollView();
             this.state.locateCtrl.start();
@@ -268,7 +268,7 @@ class App extends Component {
                 tries--;
             }
 
-            this.state.locateCtrl.stop();
+            // this.state.locateCtrl.stop();
 
             !this.state.latlng?this.state.latlng = {lat: 4.6015798, lng:-74.066401}:"";
 
@@ -290,8 +290,11 @@ class App extends Component {
             $('#drone-start-panel').scrollView();
 
             droneON?this.result.set(await Meteor.callPromise('startDrone', this.state.pythonScriptPath, this.state.numberOfPicsToTake)):'';
-            res = (this.result.get() === undefined)?["Starting Drone", "Take Off Successfull", "Taking Picture 1", "Rotating 180 degrees", "Taking Picture 2", "Rotating 180 degrees", "Pictures Taken", "Landed Successfully", "Python Executed"]:this.result.get();
-            await sleep(awaitTime); 
+            // res = (this.result.get() === undefined)?["Starting Drone", "Take Off Successfull", "Taking Picture 1", "Rotating 180 degrees", "Taking Picture 2", "Rotating 180 degrees", "Pictures Taken", "Landed Successfully", "Python Executed"]:this.result.get();
+            res = (this.result.get() === undefined)?[" Number of Pictures : 2"," METALOG: logs/meta_180521_225603.log"," Command project, commandClass, commandId: 1 4 9"," Flying State 0 landed","NavigateHomeStateChanged 0 available userRequest"," ALERT State 0 none/No alert"," Battery: 89"," Trim: 0 1 2 3 4 5 Command project, commandClass, commandId: 1 4 9"," 6 7 8 9"," FlatTrim changed"," 0 Battery: 89"," Command project, commandClass, commandId: 1 4 9",""," Taking off ... Flying State 1 takingoff"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9","Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," FLYING"," Take Off Successfull"," Picture 1 Taken."," Rotating 180.0 Degrees"," Waiting 5 seconds"," Finished rotation # 1"," Total Rotation: 180.0 Degrees"," Command project, commandClass, commandId: 1 4 9"," Picture 2 Taken."," Rotating 180.0 Degrees"," Waiting 5 seconds"," Finished rotation # 2"," Total Rotation: 360.0 Degrees"," Landing ... Command project,commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Flying State 2 hovering"," Flying State 2 hovering"," Commandproject, commandClass, commandId: 1 4 9"," Flying State 2 hovering"," Flying State 2 hovering"," Flying State 2 hovering"," Command project, commandClass,commandId: 1 4 9"," Flying State 2 hovering"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9","Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," LANDED"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Battery: 89"," Python Executed"]:this.result.get();
+            
+
+            await sleep(awaitTime);
             rows = "";
              for (var i = 0; i < res.length; i++) {                    
                 rows += '<div class="python-line">> '+res[i]+'</div>';
@@ -308,28 +311,28 @@ class App extends Component {
 
 
             droneON?this.listFTPDirs.set(await Meteor.callPromise('listFTPDirs', this.state.droneIP, this.state.ftpFilePath)):'';
-            // let listFTPDirs = (this.listFTPDirs.get() === undefined)?[{name: "Bebop_Drone_2018-04-26T151048+0000_FCCB9F.jpg"},{name: "Bebop_Drone_2018-04-26T151053+0000_FCCB9F.jpg"}]:this.listFTPDirs.get();
-            let listFTPDirs = (this.listFTPDirs.get() === undefined)?[{name: "1.jpg"},{name: "2.jpg"}, {name: "3.jpg"}, {name: "4.jpg"}]:this.listFTPDirs.get();
+            // let listFTPDirs = (this.listFTPDirs.get() === undefined)?[{name: "4.jpg"},{name: "3.jpg"}, {name: "2.jpg"}, {name: "1.jpg"}]:this.listFTPDirs.get();
+            let listFTPDirs = (this.listFTPDirs.get() === undefined)?this.state.numberOfPicsToTake===2?[{name: "Bebop_Drone_2018-05-21T160000+0000_C8368M.jpg"}, {name: "Bebop_Drone_2018-05-21T162000+0000_3B0803.jpg"}]:[{name: "Bebop_Drone_2018-05-21T160000+0000_C8368M.jpg"},{name: "Bebop_Drone_2018-05-21T161000+0000_291C01.jpg"}, {name: "Bebop_Drone_2018-05-21T162000+0000_3B0803.jpg"}, {name: "Bebop_Drone_2018-05-21T163000+0000_856C9F.jpg"}]:this.listFTPDirs.get();
             await sleep(awaitTime); 
 
             rows = "";
-            if (listFTPDirs.length > 0){
+            if (listFTPDirs.length >= 0){
                 listFTPDirs.reverse();
                 let numberOfPicsToTake = this.state.numberOfPicsToTake;
                 let colorThief = new ColorThief.colorRob();                
-                for (var i = 0; i < numberOfPicsToTake; i++) {
+                for (var i = numberOfPicsToTake-1; i >= 0; i--) {
                     if (listFTPDirs[i].name != undefined){
                         if (listFTPDirs[i].name.toLowerCase().includes(".jpg") || listFTPDirs[i].name.toLowerCase().includes(".jpeg") || listFTPDirs[i].name.toLowerCase().includes(".png")){
                             
                             // Transfer pictures taken.
-                            document.getElementById('operation-header').innerHTML = 'Transfering pictures, please wait...<hr> Picture: ' + (i+1) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
+                            document.getElementById('operation-header').innerHTML = 'Transfering pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
                             $('#drone-start-panel').scrollView();
 
                             droneON?this.getPicturesFTP.set(await Meteor.callPromise('getPicturesFTP', this.state.droneIP, this.state.ftpFilePath, listFTPDirs[i].name, this.state.serverImageStorePath)):'';
                             res = (this.getPicturesFTP.get() === undefined)?'':this.getPicturesFTP.get();
-                            await sleep(awaitTime); 
+                            await sleep(awaitTime);
 
-                            document.getElementById('operation-header').innerHTML = 'Getting Base64 String of the pictures, please wait...<hr> Picture: ' + (i+1) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
+                            document.getElementById('operation-header').innerHTML = 'Getting Base64 String of the pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
                             document.getElementById('loading-gif').src = '/img/ToServer.gif';
                             $('#drone-start-panel').scrollView();
                             
@@ -339,7 +342,7 @@ class App extends Component {
                             await sleep(awaitTime); 
 
                             // Analyse pictures taken.
-                            document.getElementById('operation-header').innerHTML =  'Analyzing pictures, please wait...<hr> Picture: ' + (i+1) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
+                            document.getElementById('operation-header').innerHTML =  'Analyzing pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
                             $('#drone-start-panel').scrollView();
 
                             let img = new Image();
@@ -365,7 +368,7 @@ class App extends Component {
 
                             rows += ('<div class="row">'
                                      +'   <div class="col-xs-11">'
-                                     +'       <h4><strong>Picture: ' + (i+1) +' of ' + numberOfPicsToTake + '<br>' + matchPctage + '% Match to Base Color'+ '<br> [Lat, Lng]: [' + this.state.latlng.lat +", " +this.state.latlng.lng + ']<br>' +  listFTPDirs[i].name+'</strong></h4>'
+                                     +'       <h4><strong>Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' + matchPctage + '% Match to Base Color'+ '<br> [Lat, Lng]: [' + this.state.latlng.lat +", " +this.state.latlng.lng + ']<br>' +  listFTPDirs[i].name+'</strong></h4>'
                                      +'       <img id='+img.id+' src='+img.src+' class='+img.className+'>'
                                      +'   </div>'
                                      +'   <div class="col-xs-1">'
@@ -377,7 +380,7 @@ class App extends Component {
                             
 
                             // Checking connection to MTC.
-                            document.getElementById('operation-header').innerHTML = 'Checking connection to MTC, please wait...<hr> Picture: ' + (i+1) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
+                            document.getElementById('operation-header').innerHTML = 'Checking connection to MTC, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
                             document.getElementById('loading-gif').src = '/img/ToMTCSerial.gif';                            
                             $('#drone-start-panel').scrollView();
 
@@ -391,7 +394,7 @@ class App extends Component {
                             }
                             
                             // Posting to MTC.
-                            document.getElementById('operation-header').innerHTML = 'Posting report to MTC, please wait...<hr> Report: ' + (i+1) +' of ' + numberOfPicsToTake + '<br> Match: ' +  matchPctage + '% <br> [Lat, Lng]: [' + this.state.latlng.lat +", " +this.state.latlng.lng + ']<br> Drone ID: ' + this.state.droneID;
+                            document.getElementById('operation-header').innerHTML = 'Posting report to MTC, please wait...<hr> Report: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br> Match: ' +  matchPctage + '% <br> [Lat, Lng]: [' + this.state.latlng.lat +", " +this.state.latlng.lng + ']<br> Drone ID: ' + this.state.droneID;
                             $('#drone-start-panel').scrollView();
 
                             // POST TO MTC
