@@ -268,7 +268,7 @@ class App extends Component {
                 tries--;
             }
 
-            // this.state.locateCtrl.stop();
+            this.state.locateCtrl.stop();
 
             !this.state.latlng?this.state.latlng = {lat: 4.6015798, lng:-74.066401}:"";
 
