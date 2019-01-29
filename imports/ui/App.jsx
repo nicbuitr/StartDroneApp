@@ -1,8 +1,3 @@
-
-/**TODO
-<-- Check Hasta Acá. -->
-/
-
 /* global L*/
 import React, { Component, PropTypes } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
@@ -12,14 +7,13 @@ import { PossibleZones } from '../api/startDroneMethods.js';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import PossibleZone from './PossibleZone.jsx';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { HTTP } from 'meteor/http';
- 
+
 const sleep = (mS) => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, mS);
-  });
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, mS);
+    });
 }
 
 // App component - represents the whole app
@@ -27,7 +21,7 @@ class App extends Component {
 
     constructor(props) {
         super(props);
- 
+
         this.state = {
             hideCompleted: false,
             map: null,
@@ -35,11 +29,11 @@ class App extends Component {
             latlng: null,
             filters: [],
             locateCtrl: null,
-            pythonScriptPath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/core/",
+            pythonScriptPath: "/BebopDrone/core/",
             droneIP: "192.168.42.1",
             droneID: 1,
             ftpFilePath: "/internal_000/Bebop_Drone/media/",
-            serverImageStorePath: "C:/Users/NicoBuitrago/Downloads/Web/StartDroneApp/BebopDrone/DronePictures/",
+            serverImageStorePath: "/BebopDrone/DronePictures/",
             numberOfPicsToTake: 2,
             baseColorRGB: [255, 255, 255],
             minMatchPctage: 85,
@@ -49,12 +43,12 @@ class App extends Component {
             MTC_ON: false
         };
     }
-  
+
     handleSubmit(event) {
         event.preventDefault();
-        this.state.latlng?Meteor.call('possibleZones.insert', this.state.latlng):alert('Latlng nulo.');
+        this.state.latlng ? Meteor.call('possibleZones.insert', this.state.latlng) : alert('Latlng nulo.');
     }
-  
+
     toggleHideCompleted() {
         this.setState({
             hideCompleted: !this.state.hideCompleted,
@@ -66,45 +60,45 @@ class App extends Component {
 
         let map = this.state.map;
 
-        if (!this.state.map){
-            map = L.map('map').setView([4.625826,-74.0923325], 11);
+        if (!this.state.map) {
+            map = L.map('map').setView([4.625826, -74.0923325], 11);
             // map = L.map('map').setView([4.6011612,-74.0656423], 18);
             //map = L.map('map').setView([39.74739, -105], 12);
 
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibmljYnVpdHIiLCJhIjoiY2oydHJmODRrMDBiYTMzanhxbzk2YnFudiJ9.KRyluyVgDk_ShZOYEuW1Wg', {
                 maxZoom: 18,
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="http://mapbox.com">Mapbox</a>, ' +
-            'App by &copy; 2017 <a href="https://github.com/nicbuitr/StartDroneApp">Nicol&aacute;s Buitrago C</a>',
+                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                    'Imagery © <a href="http://mapbox.com">Mapbox</a>, ' +
+                    'App by &copy; 2017 <a href="https://github.com/nicbuitr/StartDroneApp">Nicol&aacute;s Buitrago C</a>',
                 id: 'mapbox.streets'
             }).addTo(map);
 
-            this.state.locateCtrl = L.control.locate({locateOptions: {enableHighAccuracy: true}}).addTo(map);
+            this.state.locateCtrl = L.control.locate({ locateOptions: { enableHighAccuracy: true } }).addTo(map);
             map.on('locationfound',
-            (e) => {
-                this.state.latlng = e.latlng;
-            });
+                (e) => {
+                    this.state.latlng = e.latlng;
+                });
 
-            map.addControl( new L.Control.Search({
+            map.addControl(new L.Control.Search({
                 url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
                 jsonpParam: 'json_callback',
                 propertyName: 'display_name',
-                propertyLoc: ['lat','lon'],
-                marker: L.circleMarker([0,0],{radius:30}),
+                propertyLoc: ['lat', 'lon'],
+                marker: L.circleMarker([0, 0], { radius: 30 }),
                 autoCollapse: true,
                 autoType: false,
                 zoom: 18,
                 minLength: 2
-            }) );
+            }));
         }
-        if (this.state.layer){
+        if (this.state.layer) {
             if (map.hasLayer(this.state.layer)) {
                 map.removeLayer(this.state.layer);
             }
         }
 
-  
+
         var progress = document.getElementById('progress');
         var progressBar = document.getElementById('progress-bar');
 
@@ -112,7 +106,7 @@ class App extends Component {
             if (elapsed > 1000) {
                 // if it takes more than a second to load, display the progress bar:
                 progress.style.display = 'block';
-                progressBar.style.width = Math.round(processed/total*100) + '%';
+                progressBar.style.width = Math.round(processed / total * 100) + '%';
             }
 
             if (processed === total) {
@@ -130,7 +124,7 @@ class App extends Component {
             if (feature && feature.popupContent) {
                 popupContent += feature.popupContent;
             }
-            popupContent = ReactDOMServer.renderToString(<PossibleZone key={'possible_zone_'+feature._id} feature={feature} />);
+            popupContent = ReactDOMServer.renderToString(<PossibleZone key={'possible_zone_' + feature._id} feature={feature} />);
             layer.bindPopup(popupContent);
             markerList.push(layer);
         }
@@ -158,70 +152,70 @@ class App extends Component {
         this.state.map = map;
     }
 
-    handleInputChange(e){
+    handleInputChange(e) {
         var state = this.state;
-        if (e.target.type === 'checkbox'){
-            if(e.target.name === 'droneON'){
-              state.droneON = e.target.checked;
+        if (e.target.type === 'checkbox') {
+            if (e.target.name === 'droneON') {
+                state.droneON = e.target.checked;
             }
-            else if(e.target.name === 'MTC_ON'){
-              state.MTC_ON = e.target.checked;
+            else if (e.target.name === 'MTC_ON') {
+                state.MTC_ON = e.target.checked;
             }
         }
         else {
             e.preventDefault();
-            if(e.target.name === 'pythonScriptPath'){
-              state.pythonScriptPath = e.target.value;
+            if (e.target.name === 'pythonScriptPath') {
+                state.pythonScriptPath = e.target.value;
             }
-            else if(e.target.name === 'droneIP'){
-              state.droneIP = e.target.value;
+            else if (e.target.name === 'droneIP') {
+                state.droneIP = e.target.value;
             }
-            else if(e.target.name === 'droneID'){
-              state.droneID = Number(e.target.value);
+            else if (e.target.name === 'droneID') {
+                state.droneID = Number(e.target.value);
             }
-            else if(e.target.name === 'ftpFilePath'){
-              state.ftpFilePath = e.target.value;
+            else if (e.target.name === 'ftpFilePath') {
+                state.ftpFilePath = e.target.value;
             }
-            else if(e.target.name === 'serverImageStorePath'){
-              state.serverImageStorePath = e.target.value;
+            else if (e.target.name === 'serverImageStorePath') {
+                state.serverImageStorePath = e.target.value;
             }
-            else if(e.target.name === 'numberOfPicsToTake'){
-              state.numberOfPicsToTake = Number(e.target.value);
+            else if (e.target.name === 'numberOfPicsToTake') {
+                state.numberOfPicsToTake = Number(e.target.value);
             }
-            else if(e.target.name === 'baseColorRGB'){
-              state.baseColorRGB = e.target.value.split(',');
+            else if (e.target.name === 'baseColorRGB') {
+                state.baseColorRGB = e.target.value.split(',');
             }
-            else if(e.target.name === 'minMatchPctage'){
-              state.minMatchPctage = Number(e.target.value);
+            else if (e.target.name === 'minMatchPctage') {
+                state.minMatchPctage = Number(e.target.value);
             }
-            else if(e.target.name === 'ipMTC'){
-              state.ipMTC = e.target.value;
+            else if (e.target.name === 'ipMTC') {
+                state.ipMTC = e.target.value;
             }
-            else if(e.target.name === 'awaitTime'){
-              state.awaitTime = Number(e.target.value);
+            else if (e.target.name === 'awaitTime') {
+                state.awaitTime = Number(e.target.value);
             }
         }
         this.setState(state);
     }
 
     async startDrone(event) {
-        try{
+        try {
             //event.preventDefault();
             let inputs = document.getElementsByTagName('input');
             for (var i = 0; i < inputs.length; i++) {
-                 let empty = false;
-                 if (inputs[i].id != 'searchtext9'){
-                    if (inputs[i].type === 'text'){
-                        if (inputs[i].value === ''){
+                let empty = false;
+                if (inputs[i].id != 'searchtext9') {
+                    if (inputs[i].type === 'text') {
+                        if (inputs[i].value === '') {
                             empty = true;
                         }
                     }
-                    else if (inputs[i].type === 'number'){
-                        if (inputs[i].value === '' || inputs[i].value <= 0){
+                    else if (inputs[i].type === 'number') {
+                        if (inputs[i].value === '' || inputs[i].value <= 0) {
                             empty = true;
                         }
                     }
-                    if (empty){
+                    if (empty) {
                         inputs[i].style.backgroundColor = 'rgb(255, 235, 235)';
                         inputs[i].style.borderColor = 'red';
                         inputs[i].focus();
@@ -229,16 +223,16 @@ class App extends Component {
                         return;
                     }
                     else {
-                        if (inputs[i].id === 'baseColorRGB'){
-                            inputs[i].style.borderColor =  '#ccc';
+                        if (inputs[i].id === 'baseColorRGB') {
+                            inputs[i].style.borderColor = '#ccc';
                         }
-                        else{
+                        else {
                             inputs[i].style.backgroundColor = 'white';
                             inputs[i].style.borderColor = '#ccc';
                         }
                     }
-                 }
-            } 
+                }
+            }
             this.result = new ReactiveVar();
             this.latestError = new ReactiveVar();
             this.checkFTPConnection = new ReactiveVar();
@@ -262,7 +256,7 @@ class App extends Component {
             $('#drone-start-panel').scrollView();
             this.state.locateCtrl.start();
 
-            while (!this.state.latlng && tries > 0){
+            while (!this.state.latlng && tries > 0) {
                 await sleep(1000);
                 document.getElementById('operation-header').innerHTML = 'Attempting to get current location <hr>' + tries + ' seconds left.'
                 tries--;
@@ -270,84 +264,81 @@ class App extends Component {
 
             this.state.locateCtrl.stop();
 
-            !this.state.latlng?this.state.latlng = {lat: 4.6015798, lng:-74.066401}:"";
+            !this.state.latlng ? this.state.latlng = { lat: 4.6015798, lng: -74.066401 } : "";
 
             // Check connection to drone by checking FTP status
-            document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Checking connection to drone... </div></strong></h4><img id="loading-gif" src="/img/ToDroneSerial.gif" className="inline-img-responsive" alt="Drone Gif"/></div></div>);
+            document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Checking connection to drone... </div></strong></h4><img id="loading-gif" src="/img/ToDroneSerial.gif" className="inline-img-responsive" alt="Drone Gif" /></div></div>);
             document.getElementById('drone-pictures').innerHTML = '';
             document.getElementById('python-results').innerHTML = '';
             document.getElementById('python-results').classList.remove('python-results');
             $('#drone-start-panel').scrollView();
-            
 
-            droneON?this.checkFTPConnection.set(await Meteor.callPromise('checkFTPConnection', this.state.droneIP)):'';
-            res = (this.checkFTPConnection.get() === undefined)?'Connection to Drone FTP Successful':this.checkFTPConnection.get();
-            await sleep(awaitTime);             
+            droneON ? this.checkFTPConnection.set(await Meteor.callPromise('checkFTPConnection', this.state.droneIP)) : '';
+            res = (this.checkFTPConnection.get() === undefined) ? 'Connection to Drone FTP Successful' : this.checkFTPConnection.get();
+            await sleep(awaitTime);
 
             // Execute Python script
             document.getElementById('operation-header').innerHTML = res + '<hr> Executing script, please wait...';
             document.getElementById('loading-gif').src = '/img/drone.gif';
             $('#drone-start-panel').scrollView();
 
-            droneON?this.result.set(await Meteor.callPromise('startDrone', this.state.pythonScriptPath, this.state.numberOfPicsToTake)):'';
+            droneON ? this.result.set(await Meteor.callPromise('startDrone', this.state.pythonScriptPath, this.state.numberOfPicsToTake)) : '';
             // res = (this.result.get() === undefined)?["Starting Drone", "Take Off Successfull", "Taking Picture 1", "Rotating 180 degrees", "Taking Picture 2", "Rotating 180 degrees", "Pictures Taken", "Landed Successfully", "Python Executed"]:this.result.get();
-            res = (this.result.get() === undefined)?[" Number of Pictures : 2"," METALOG: logs/meta_180521_225603.log"," Command project, commandClass, commandId: 1 4 9"," Flying State 0 landed","NavigateHomeStateChanged 0 available userRequest"," ALERT State 0 none/No alert"," Battery: 89"," Trim: 0 1 2 3 4 5 Command project, commandClass, commandId: 1 4 9"," 6 7 8 9"," FlatTrim changed"," 0 Battery: 89"," Command project, commandClass, commandId: 1 4 9",""," Taking off ... Flying State 1 takingoff"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9","Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," FLYING"," Take Off Successfull"," Picture 1 Taken."," Rotating 180.0 Degrees"," Waiting 5 seconds"," Finished rotation # 1"," Total Rotation: 180.0 Degrees"," Command project, commandClass, commandId: 1 4 9"," Picture 2 Taken."," Rotating 180.0 Degrees"," Waiting 5 seconds"," Finished rotation # 2"," Total Rotation: 360.0 Degrees"," Landing ... Command project,commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Flying State 2 hovering"," Flying State 2 hovering"," Commandproject, commandClass, commandId: 1 4 9"," Flying State 2 hovering"," Flying State 2 hovering"," Flying State 2 hovering"," Command project, commandClass,commandId: 1 4 9"," Flying State 2 hovering"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9","Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," LANDED"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Command project, commandClass, commandId: 1 4 9"," Battery: 89"," Python Executed"]:this.result.get();
-            
+            res = (this.result.get() === undefined) ? [" Number of Pictures : 2", " METALOG: logs/meta_180521_225603.log", " Command project, commandClass, commandId: 1 4 9", " Flying State 0 landed", "NavigateHomeStateChanged 0 available userRequest", " ALERT State 0 none/No alert", " Battery: 89", " Trim: 0 1 2 3 4 5 Command project, commandClass, commandId: 1 4 9", " 6 7 8 9", " FlatTrim changed", " 0 Battery: 89", " Command project, commandClass, commandId: 1 4 9", "", " Taking off ... Flying State 1 takingoff", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", "Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " FLYING", " Take Off Successfull", " Picture 1 Taken.", " Rotating 180.0 Degrees", " Waiting 5 seconds", " Finished rotation # 1", " Total Rotation: 180.0 Degrees", " Command project, commandClass, commandId: 1 4 9", " Picture 2 Taken.", " Rotating 180.0 Degrees", " Waiting 5 seconds", " Finished rotation # 2", " Total Rotation: 360.0 Degrees", " Landing ... Command project,commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " Flying State 2 hovering", " Flying State 2 hovering", " Commandproject, commandClass, commandId: 1 4 9", " Flying State 2 hovering", " Flying State 2 hovering", " Flying State 2 hovering", " Command project, commandClass,commandId: 1 4 9", " Flying State 2 hovering", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", "Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " LANDED", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " Command project, commandClass, commandId: 1 4 9", " Battery: 89", " Python Executed"] : this.result.get();
 
             await sleep(awaitTime);
             rows = "";
-             for (var i = 0; i < res.length; i++) {                    
-                rows += '<div class="python-line">> '+res[i]+'</div>';
+            for (var i = 0; i < res.length; i++) {
+                rows += '<div class="python-line">> ' + res[i] + '</div>';
             }
-            
+
             // Display Python log and List FTP directories and files
             document.getElementById('operation-header').innerHTML = 'Python succesfully executed. Listing FTP Directories and Files...';
             document.getElementById('loading-gif').src = '/img/ToDroneSerial.gif';
-            if (rows.length > 0){
+            if (rows.length > 0) {
                 document.getElementById('python-results').classList.add('python-results');
                 document.getElementById('python-results').innerHTML = rows;
             }
             $('#drone-start-panel').scrollView();
 
-
-            droneON?this.listFTPDirs.set(await Meteor.callPromise('listFTPDirs', this.state.droneIP, this.state.ftpFilePath)):'';
+            droneON ? this.listFTPDirs.set(await Meteor.callPromise('listFTPDirs', this.state.droneIP, this.state.ftpFilePath)) : '';
             // let listFTPDirs = (this.listFTPDirs.get() === undefined)?[{name: "4.jpg"},{name: "3.jpg"}, {name: "2.jpg"}, {name: "1.jpg"}]:this.listFTPDirs.get();
-            let listFTPDirs = (this.listFTPDirs.get() === undefined)?this.state.numberOfPicsToTake===2?[{name: "Bebop_Drone_2018-05-21T160000+0000_C8368M.jpg"}, {name: "Bebop_Drone_2018-05-21T162000+0000_3B0803.jpg"}]:[{name: "Bebop_Drone_2018-05-21T160000+0000_C8368M.jpg"},{name: "Bebop_Drone_2018-05-21T161000+0000_291C01.jpg"}, {name: "Bebop_Drone_2018-05-21T162000+0000_3B0803.jpg"}, {name: "Bebop_Drone_2018-05-21T163000+0000_856C9F.jpg"}]:this.listFTPDirs.get();
-            await sleep(awaitTime); 
+            let listFTPDirs = (this.listFTPDirs.get() === undefined) ? this.state.numberOfPicsToTake === 2 ? [{ name: "Bebop_Drone_2018-05-21T160000+0000_C8368M.jpg" }, { name: "Bebop_Drone_2018-05-21T162000+0000_3B0803.jpg" }] : [{ name: "Bebop_Drone_2018-05-21T160000+0000_C8368M.jpg" }, { name: "Bebop_Drone_2018-05-21T161000+0000_291C01.jpg" }, { name: "Bebop_Drone_2018-05-21T162000+0000_3B0803.jpg" }, { name: "Bebop_Drone_2018-05-21T163000+0000_856C9F.jpg" }] : this.listFTPDirs.get();
+            await sleep(awaitTime);
 
             rows = "";
-            if (listFTPDirs.length >= 0){
+            if (listFTPDirs.length >= 0) {
                 listFTPDirs.reverse();
                 let numberOfPicsToTake = this.state.numberOfPicsToTake;
-                let colorThief = new ColorThief.colorRob();                
-                for (var i = numberOfPicsToTake-1; i >= 0; i--) {
-                    if (listFTPDirs[i].name != undefined){
-                        if (listFTPDirs[i].name.toLowerCase().includes(".jpg") || listFTPDirs[i].name.toLowerCase().includes(".jpeg") || listFTPDirs[i].name.toLowerCase().includes(".png")){
-                            
+                let colorThief = new ColorThief.colorRob();
+                for (var i = numberOfPicsToTake - 1; i >= 0; i--) {
+                    if (listFTPDirs[i].name != undefined) {
+                        if (listFTPDirs[i].name.toLowerCase().includes(".jpg") || listFTPDirs[i].name.toLowerCase().includes(".jpeg") || listFTPDirs[i].name.toLowerCase().includes(".png")) {
+
                             // Transfer pictures taken.
-                            document.getElementById('operation-header').innerHTML = 'Transfering pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
+                            document.getElementById('operation-header').innerHTML = 'Transfering pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake - i) + ' of ' + numberOfPicsToTake + '<br>' + listFTPDirs[i].name;
                             $('#drone-start-panel').scrollView();
 
-                            droneON?this.getPicturesFTP.set(await Meteor.callPromise('getPicturesFTP', this.state.droneIP, this.state.ftpFilePath, listFTPDirs[i].name, this.state.serverImageStorePath)):'';
-                            res = (this.getPicturesFTP.get() === undefined)?'':this.getPicturesFTP.get();
+                            droneON ? this.getPicturesFTP.set(await Meteor.callPromise('getPicturesFTP', this.state.droneIP, this.state.ftpFilePath, listFTPDirs[i].name, this.state.serverImageStorePath)) : '';
+                            res = (this.getPicturesFTP.get() === undefined) ? '' : this.getPicturesFTP.get();
                             await sleep(awaitTime);
 
-                            document.getElementById('operation-header').innerHTML = 'Getting Base64 String of the pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
+                            document.getElementById('operation-header').innerHTML = 'Getting Base64 String of the pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake - i) + ' of ' + numberOfPicsToTake + '<br>' + listFTPDirs[i].name;
                             document.getElementById('loading-gif').src = '/img/ToServer.gif';
                             $('#drone-start-panel').scrollView();
-                            
+
                             // Get base64 string from the transferred image
                             this.getBase64ImageString.set(await Meteor.callPromise('getBase64ImageString', this.state.droneIP, this.state.ftpFilePath, listFTPDirs[i].name, this.state.serverImageStorePath));
-                            res = (this.getBase64ImageString.get() === undefined)?'':this.getBase64ImageString.get();
-                            await sleep(awaitTime); 
+                            res = (this.getBase64ImageString.get() === undefined) ? '' : this.getBase64ImageString.get();
+                            await sleep(awaitTime);
 
                             // Analyse pictures taken.
-                            document.getElementById('operation-header').innerHTML =  'Analyzing pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
+                            document.getElementById('operation-header').innerHTML = 'Analyzing pictures, please wait...<hr> Picture: ' + (numberOfPicsToTake - i) + ' of ' + numberOfPicsToTake + '<br>' + listFTPDirs[i].name;
                             $('#drone-start-panel').scrollView();
 
                             let img = new Image();
                             img.id = listFTPDirs[i].name;
-                            img.src = "data:image/jpg;base64,"+res;
+                            img.src = "data:image/jpg;base64," + res;
                             img.className = "inline-img-responsive";
                             document.getElementById('drone-pictures').innerHTML = '';
                             document.getElementById('drone-pictures').appendChild(img);
@@ -359,51 +350,51 @@ class App extends Component {
 
                             // Match Picture Dominant Color to BaseRGB Color
                             this.analysePicture.set(await Meteor.callPromise('analysePicture', this.state.baseColorRGB, dominantColor));
-                            let matchPctage = (this.analysePicture.get() === undefined)?'':this.analysePicture.get();
-                            await sleep(awaitTime); 
+                            let matchPctage = (this.analysePicture.get() === undefined) ? '' : this.analysePicture.get();
+                            await sleep(awaitTime);
 
                             for (var j = 0; j < colorPalette.length; j++) {
-                                colorPaletteRows += '<div class="btn-xs colored-btn" style="background-color: rgb('+colorPalette[j][0]+', '+colorPalette[j][1]+', '+colorPalette[j][2]+');'+'">&nbsp;</div>'
+                                colorPaletteRows += '<div class="btn-xs colored-btn" style="background-color: rgb(' + colorPalette[j][0] + ', ' + colorPalette[j][1] + ', ' + colorPalette[j][2] + ');' + '">&nbsp;</div>'
                             }
 
                             rows += ('<div class="row">'
-                                     +'   <div class="col-xs-11">'
-                                     +'       <h4><strong>Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' + matchPctage + '% Match to Base Color'+ '<br> [Lat, Lng]: [' + this.state.latlng.lat +", " +this.state.latlng.lng + ']<br>' +  listFTPDirs[i].name+'</strong></h4>'
-                                     +'       <img id='+img.id+' src='+img.src+' class='+img.className+'>'
-                                     +'   </div>'
-                                     +'   <div class="col-xs-1">'
-                                     +'       <h4><strong>Colors</strong></h4><hr>'
-                                     +'       <div class="btn-xs colored-btn" style="background-color: rgb('+dominantColor[0]+', '+dominantColor[1]+', '+dominantColor[2]+');'+'">&nbsp;</div>'
-                                     + colorPaletteRows
-                                     +'   </div>'
-                                     +'</div><hr>');
-                            
+                                + '   <div class="col-xs-11">'
+                                + '       <h4><strong>Picture: ' + (numberOfPicsToTake - i) + ' of ' + numberOfPicsToTake + '<br>' + matchPctage + '% Match to Base Color' + '<br> [Lat, Lng]: [' + this.state.latlng.lat + ", " + this.state.latlng.lng + ']<br>' + listFTPDirs[i].name + '</strong></h4>'
+                                + '       <img id=' + img.id + ' src=' + img.src + ' class=' + img.className + '>'
+                                + '   </div>'
+                                + '   <div class="col-xs-1">'
+                                + '       <h4><strong>Colors</strong></h4><hr>'
+                                + '       <div class="btn-xs colored-btn" style="background-color: rgb(' + dominantColor[0] + ', ' + dominantColor[1] + ', ' + dominantColor[2] + ');' + '">&nbsp;</div>'
+                                + colorPaletteRows
+                                + '   </div>'
+                                + '</div><hr>');
+
 
                             // Checking connection to MTC.
-                            document.getElementById('operation-header').innerHTML = 'Checking connection to MTC, please wait...<hr> Picture: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br>' +  listFTPDirs[i].name;
-                            document.getElementById('loading-gif').src = '/img/ToMTCSerial.gif';                            
+                            document.getElementById('operation-header').innerHTML = 'Checking connection to MTC, please wait...<hr> Picture: ' + (numberOfPicsToTake - i) + ' of ' + numberOfPicsToTake + '<br>' + listFTPDirs[i].name;
+                            document.getElementById('loading-gif').src = '/img/ToMTCSerial.gif';
                             $('#drone-start-panel').scrollView();
 
                             // CHECK CONNECTION TO MTC
-                            MTC_ON?this.isURLAvailable.set(await Meteor.callPromise('isURLAvailable', this.state.ipMTC)):'';
-                            res = (this.isURLAvailable.get() === undefined)?'':this.isURLAvailable.get();
+                            MTC_ON ? this.isURLAvailable.set(await Meteor.callPromise('isURLAvailable', this.state.ipMTC)) : '';
+                            res = (this.isURLAvailable.get() === undefined) ? '' : this.isURLAvailable.get();
                             await sleep(awaitTime);
-                            
-                            if (res.code != undefined){
-                                throw new Error("Couldn't connect to " + this.state.ipMTC + " Error: " +res.code);
+
+                            if (res.code != undefined) {
+                                throw new Error("Couldn't connect to " + this.state.ipMTC + " Error: " + res.code);
                             }
-                            
+
                             // Posting to MTC.
-                            document.getElementById('operation-header').innerHTML = 'Posting report to MTC, please wait...<hr> Report: ' + (numberOfPicsToTake-i) +' of ' + numberOfPicsToTake + '<br> Match: ' +  matchPctage + '% <br> [Lat, Lng]: [' + this.state.latlng.lat +", " +this.state.latlng.lng + ']<br> Drone ID: ' + this.state.droneID;
+                            document.getElementById('operation-header').innerHTML = 'Posting report to MTC, please wait...<hr> Report: ' + (numberOfPicsToTake - i) + ' of ' + numberOfPicsToTake + '<br> Match: ' + matchPctage + '% <br> [Lat, Lng]: [' + this.state.latlng.lat + ", " + this.state.latlng.lng + ']<br> Drone ID: ' + this.state.droneID;
                             $('#drone-start-panel').scrollView();
 
                             // POST TO MTC
-                            MTC_ON?this.postToMTC.set(await Meteor.callPromise('postToMTC', this.state.ipMTC, this.state.minMatchPctage, matchPctage, this.state.latlng, this.state.droneID, img.src)):'';
-                            res = (this.postToMTC.get() === undefined)?'':this.postToMTC.get();
+                            MTC_ON ? this.postToMTC.set(await Meteor.callPromise('postToMTC', this.state.ipMTC, this.state.minMatchPctage, matchPctage, this.state.latlng, this.state.droneID, img.src)) : '';
+                            res = (this.postToMTC.get() === undefined) ? '' : this.postToMTC.get();
                             await sleep(awaitTime);
 
                             // Add to MongoDB Collection
-                            if (matchPctage > this.state.minMatchPctage){
+                            if (matchPctage > this.state.minMatchPctage) {
                                 Meteor.call('insertPossibleZoneAlert', this.state.minMatchPctage, matchPctage, this.state.latlng, this.state.droneID, img.src);
                             }
                         }
@@ -417,15 +408,15 @@ class App extends Component {
             document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div class="operation-success panel-body text-center"><h4><strong>EXECUTION FINISHED.</strong></h4></div></div>';
             $('#drone-start-panel').scrollView();
 
-        } 
-        catch (e){
+        }
+        catch (e) {
             this.latestError.set(e.message);
             document.getElementById('drone-start-result').innerHTML = '<div id=\"drone-start-result\" class=\"drone-start-result\"><div class=\"panel panel-default\"><div class=\"operation-failed panel-body text-center\"><h4><strong> Something went wrong <hr/>' + e.message + '</strong></h4></div></div></div>';
         }
     }
 
     async landDrone(event) {
-        try{
+        try {
             this.result = new ReactiveVar();
             this.latestError = new ReactiveVar();
             let droneON = this.state.droneON;
@@ -434,26 +425,26 @@ class App extends Component {
             let rows = '';
 
             // Check connection to drone by checking FTP status
-            document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Executing script, please wait...</div></strong></h4><img id="loading-gif" src="/img/ToDroneSerial.gif" className="inline-img-responsive" alt="Drone Gif"/></div></div>);
+            document.getElementById('drone-start-result').innerHTML = ReactDOMServer.renderToString(<div className="panel panel-default"><div id="operation-div" className="operation-in-progress panel-body text-center"><h4><strong><div id="operation-header">Executing script, please wait...</div></strong></h4><img id="loading-gif" src="/img/ToDroneSerial.gif" className="inline-img-responsive" alt="Drone Gif" /></div></div>);
             document.getElementById('drone-pictures').innerHTML = '';
             document.getElementById('python-results').innerHTML = '';
             document.getElementById('python-results').classList.remove('python-results');
             $('#drone-start-panel').scrollView();
 
             // Execute Python script
-            droneON?this.result.set(await Meteor.callPromise('landDrone', this.state.pythonScriptPath)):'';
-            res = (this.result.get() === undefined)?["Landing Drone", "Landing Successfull"]:this.result.get();
-            await sleep(awaitTime); 
-            
+            droneON ? this.result.set(await Meteor.callPromise('landDrone', this.state.pythonScriptPath)) : '';
+            res = (this.result.get() === undefined) ? ["Landing Drone", "Landing Successfull"] : this.result.get();
+            await sleep(awaitTime);
+
             rows = "";
-             for (var i = 0; i < res.length; i++) {                    
-                rows += '<div class="python-line">> '+res[i]+'</div>';
+            for (var i = 0; i < res.length; i++) {
+                rows += '<div class="python-line">> ' + res[i] + '</div>';
             }
-            
+
             // Display Python log and List FTP directories and files
             document.getElementById('operation-header').innerHTML = 'Python succesfully executed. Listing FTP Directories and Files...';
             document.getElementById('loading-gif').src = '/img/ToDroneSerial.gif';
-            if (rows.length > 0){
+            if (rows.length > 0) {
                 document.getElementById('python-results').classList.add('python-results');
                 document.getElementById('python-results').innerHTML = rows;
             }
@@ -461,9 +452,9 @@ class App extends Component {
 
             // // EXECUTION FINISHED
             document.getElementById('drone-start-result').innerHTML = '<div class="panel panel-default"><div class="operation-success panel-body text-center"><h4><strong>EXECUTION FINISHED.</strong></h4></div></div>';
-            $('#drone-start-panel').scrollView();            
-        } 
-        catch (e){
+            $('#drone-start-panel').scrollView();
+        }
+        catch (e) {
             this.latestError.set(e.message);
             document.getElementById('drone-start-result').innerHTML = '<div id=\"drone-start-result\" class=\"drone-start-result\"><div class=\"panel panel-default\"><div class=\"operation-failed panel-body text-center\"><h4><strong> Something went wrong <hr/>' + e.message + '</strong></h4></div></div></div>';
         }
@@ -472,125 +463,125 @@ class App extends Component {
     render() {
         return (
             <div className="container">
-              <header id="header" className="collapse in">      
-                <AccountsUIWrapper />
-                <div className="col-md-12 text-center">
-                    <img src="img/logo.png" className="inline-img-responsive" id="img-logo" alt="Start Drone App Logo"/>
-                    { this.props.currentUser && this.props.currentUser.username === 'admin' ?
-                        <div id="drone-menu">
-                            <div className="row text-left collapse in" id="parameters">
-                                <hr/>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='droneIP'>Drone IP Address</label>
+                <header id="header" className="collapse in">
+                    <AccountsUIWrapper />
+                    <div className="col-md-12 text-center">
+                        <img src="img/logo.png" className="inline-img-responsive" id="img-logo" alt="Start Drone App Logo" />
+                        {this.props.currentUser && this.props.currentUser.username === 'admin' ?
+                            <div id="drone-menu">
+                                <div className="row text-left collapse in" id="parameters">
+                                    <hr />
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='droneIP'>Drone IP Address</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="text" ref="textInput" id="droneIP" name="droneIP" placeholder="Type drone IP" value={this.state.droneIP} onChange={this.handleInputChange.bind(this)} title="Drone IP Address" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='droneID'>Drone ID</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="number" ref="textInput" id="droneID" name="droneID" placeholder="Type drone ID" value={this.state.droneID} onChange={this.handleInputChange.bind(this)} title="Drone ID" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='pythonScriptPath'>Python Script Path</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="text" ref="textInput" id="pythonScriptPath" name="pythonScriptPath" value={this.state.pythonScriptPath} disabled title="Path of the Python Script that performs the drone routine" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='ftpFilePath'>Drone FTP Path</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="text" ref="textInput" id="ftpFilePath" name="ftpFilePath" placeholder="Type FTP FilePath" value={this.state.ftpFilePath} onChange={this.handleInputChange.bind(this)} title="Path to the drone folder that contains the pictures taken" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='serverImageStorePath'>Image Storage Path</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="text" ref="textInput" id="serverImageStorePath" name="serverImageStorePath" value={this.state.serverImageStorePath} disabled title="Path to the server folder that will store the pictures transferred from the drone" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='numberOfPicsToTake'>Pictures to Take</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="number" ref="textInput" id="numberOfPicsToTake" name="numberOfPicsToTake" placeholder="Type number of pictures to take" value={this.state.numberOfPicsToTake} onChange={this.handleInputChange.bind(this)} title="Amount of pictures to be taken by the drone" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='baseColorRGB'>Base Color RGB</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="text" ref="textInput" id="baseColorRGB" name="baseColorRGB" placeholder="Type baseColorRGB" value={this.state.baseColorRGB} onChange={this.handleInputChange.bind(this)} style={{ backgroundColor: "rgb(" + this.state.baseColorRGB + ")" }} title="Base Color that will be compared to the dominant color of the pictures taken" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='minMatchPctage'>Match % Threshold</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="number" ref="textInput" id="minMatchPctage" name="minMatchPctage" placeholder="Type number of minimum match % threshold" value={this.state.minMatchPctage} onChange={this.handleInputChange.bind(this)} title="Minimum match % threshold to create a possible illegal mining zone alert" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='ipMTC'>MTC Container URL</label>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <input className='form-control' type="text" ref="textInput" id="ipMTC" name="ipMTC" placeholder="Type the MTC Container URL" value={this.state.ipMTC} onChange={this.handleInputChange.bind(this)} title="URL of the MTC container to send the information for processing, report and notification" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='awaitTime'>Await Time(mS)</label>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <input className='form-control' type="number" ref="textInput" id="awaitTime" name="awaitTime" placeholder="Type await time" value={this.state.awaitTime} onChange={this.handleInputChange.bind(this)} title="Await time between operations" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='droneON'>Drone Connected to Server?</label>
+                                    </div>
+                                    <div className="col-md-1">
+                                        <input className='form-control' type="checkbox" ref="textInput" id="droneON" name="droneON" value={this.state.droneON} onChange={this.handleInputChange.bind(this)} title="Check this if the drone is connected to server" />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label className='control-label text-left' htmlFor='MTC_ON'>MTC & Scripts Running?</label>
+                                    </div>
+                                    <div className="col-md-1">
+                                        <input className='form-control' type="checkbox" ref="textInput" id="MTC_ON" name="MTC_ON" value={this.state.MTC_ON} onChange={this.handleInputChange.bind(this)} title="Check this if the MTC and the Python Script are running" />
+                                    </div>
                                 </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="text" ref="textInput" id="droneIP"  name="droneIP" placeholder="Type drone IP" value={this.state.droneIP} onChange={this.handleInputChange.bind(this)} title="Drone IP Address"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='droneID'>Drone ID</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="number" ref="textInput" id="droneID"  name="droneID" placeholder="Type drone ID" value={this.state.droneID} onChange={this.handleInputChange.bind(this)} title="Drone ID"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='pythonScriptPath'>Python Script Path</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="text" ref="textInput" id="pythonScriptPath"  name="pythonScriptPath" placeholder="Type script path" value={this.state.pythonScriptPath} onChange={this.handleInputChange.bind(this)} title="Path of the Python Script that performs the drone routine"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='ftpFilePath'>Drone FTP Path</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="text" ref="textInput" id="ftpFilePath"  name="ftpFilePath" placeholder="Type FTP FilePath" value={this.state.ftpFilePath} onChange={this.handleInputChange.bind(this)} title="Path to the drone folder that contains the pictures taken"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='serverImageStorePath'>Image Storage Path</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="text" ref="textInput" id="serverImageStorePath"  name="serverImageStorePath" placeholder="Type FTP serverImageStorePath" value={this.state.serverImageStorePath} onChange={this.handleInputChange.bind(this)} title="Path to the server folder that will store the pictures transferred from the drone"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='numberOfPicsToTake'>Pictures to Take</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="number" ref="textInput" id="numberOfPicsToTake"  name="numberOfPicsToTake" placeholder="Type number of pictures to take" value={this.state.numberOfPicsToTake} onChange={this.handleInputChange.bind(this)} title="Amount of pictures to be taken by the drone"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='baseColorRGB'>Base Color RGB</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="text" ref="textInput" id="baseColorRGB"  name="baseColorRGB" placeholder="Type baseColorRGB" value={this.state.baseColorRGB} onChange={this.handleInputChange.bind(this)} style={{backgroundColor: "rgb(" + this.state.baseColorRGB + ")"}} title="Base Color that will be compared to the dominant color of the pictures taken"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='minMatchPctage'>Match % Threshold</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="number" ref="textInput" id="minMatchPctage"  name="minMatchPctage" placeholder="Type number of minimum match % threshold" value={this.state.minMatchPctage} onChange={this.handleInputChange.bind(this)} title="Minimum match % threshold to create a possible illegal mining zone alert"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='ipMTC'>MTC Container URL</label>
-                                </div>
-                                <div className="col-md-10">
-                                    <input className='form-control' type="text" ref="textInput" id="ipMTC"  name="ipMTC" placeholder="Type the MTC Container URL" value={this.state.ipMTC} onChange={this.handleInputChange.bind(this)} title="URL of the MTC container to send the information for processing, report and notification"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='awaitTime'>Await Time(mS)</label>
-                                </div>
-                                <div className="col-md-4">
-                                    <input className='form-control' type="number" ref="textInput" id="awaitTime"  name="awaitTime" placeholder="Type await time" value={this.state.awaitTime} onChange={this.handleInputChange.bind(this)} title="Await time between operations"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='droneON'>Drone Connected to Server?</label>
-                                </div>
-                                <div className="col-md-1">
-                                    <input className='form-control' type="checkbox" ref="textInput" id="droneON"  name="droneON" value={this.state.droneON} onChange={this.handleInputChange.bind(this)} title="Check this if the drone is connected to server"/>
-                                </div>
-                                <div className="col-md-2">
-                                    <label className='control-label text-left' htmlFor='MTC_ON'>MTC & Scripts Running?</label>
-                                </div>
-                                <div className="col-md-1">
-                                    <input className='form-control' type="checkbox" ref="textInput" id="MTC_ON"  name="MTC_ON" value={this.state.MTC_ON} onChange={this.handleInputChange.bind(this)} title="Check this if the MTC and the Python Script are running"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <button aria-label="Toggle show or hide parameters" type="button" className="banner-chevron btn-primary btn-lg" data-toggle="collapse" data-target="#parameters" title="Hide/Show Parameters">
-                                <span></span>
-                            </button>
-                            <hr/>
-                            <button aria-label="Start Drone" title="Start Drone" type="button" className="glyphicon glyphicon-plane btn-primary btn-lg" onClick={this.startDrone.bind(this)}>
-                                <span></span>
-                            </button>
-                            &nbsp;
+                                <hr />
+                                <button aria-label="Toggle show or hide parameters" type="button" className="banner-chevron btn-primary btn-lg" data-toggle="collapse" data-target="#parameters" title="Hide/Show Parameters">
+                                    <span></span>
+                                </button>
+                                <hr />
+                                <button aria-label="Start Drone" title="Start Drone" type="button" className="glyphicon glyphicon-plane btn-primary btn-lg" onClick={this.startDrone.bind(this)}>
+                                    <span></span>
+                                </button>
+                                &nbsp;
                             <button aria-label="Land Drone" title="Land Drone" type="button" className="glyphicon glyphicon-arrow-down btn-primary btn-lg" onClick={this.landDrone.bind(this)}>
-                                <span></span>
-                            </button>
-                        </div>: <h4><strong><div className="col-md-12" id="not-logged-in"><hr/>Login as admin to enable drone deploying options.<hr/></div></strong></h4>
-                    }  
-                    <div id="drone-start-panel" className="drone-start-panel"></div>
-                    <hr/>
-                    <div id="drone-start-result" className="drone-start-result"></div>
-                    <div id="drone-pictures" className="drone-pictures"></div>
-                    <div id="python-results"></div>
-                </div>           
-                {/**TODO Generar de forma dinámica los checkbox para filtrar */}  
-                <div className="row" style={{visibility: 'hidden'}}>
-                <label className="hide-completed">
-                  <input type="checkbox" readOnly checked={this.state.hideCompleted} onClick={this.toggleHideCompleted.bind(this)}
-                  />
-                  Hide Completed PossibleZones
+                                    <span></span>
+                                </button>
+                            </div> : <h4><strong><div className="col-md-12" id="not-logged-in"><hr />Login as admin to enable drone deploying options.<hr /></div></strong></h4>
+                        }
+                        <div id="drone-start-panel" className="drone-start-panel"></div>
+                        <hr />
+                        <div id="drone-start-result" className="drone-start-result"></div>
+                        <div id="drone-pictures" className="drone-pictures"></div>
+                        <div id="python-results"></div>
+                    </div>
+                    {/**TODO Generar de forma dinámica los checkbox para filtrar */}
+                    <div className="row" style={{ visibility: 'hidden' }}>
+                        <label className="hide-completed">
+                            <input type="checkbox" readOnly checked={this.state.hideCompleted} onClick={this.toggleHideCompleted.bind(this)}
+                            />
+                            Hide Completed PossibleZones
                 </label>
-                </div>
+                    </div>
 
-              </header>
-              <div id="progress"><div id="progress-bar"></div></div>
-              <div id="map-div" className="collapse in">
+                </header>
+                <div id="progress"><div id="progress-bar"></div></div>
+                <div id="map-div" className="collapse in">
                     <div id="map"></div>
-              </div>
+                </div>
                 <button aria-label="Toggle show or hide header" type="button" className="banner-chevron btn-primary btn-lg" data-toggle="collapse" data-target="#map-div">
                     <span></span>
                 </button>
-              {this.state.map?this.componentDidMount():''}
+                {this.state.map ? this.componentDidMount() : ''}
             </div>
         );
     }
@@ -600,7 +591,7 @@ App.propTypes = {
     possibleZones: PropTypes.array.isRequired,
     currentUser: PropTypes.object,
 };
- 
+
 export default createContainer(() => {
     Meteor.subscribe('possibleZones');
     return {

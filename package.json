@@ -1,6 +1,12 @@
 {
   "name": "start-drone-app",
-  "private": true,
+  "description": "Web Application developed to deploy a drone, retrieve and analyze the pictures taken",
+  "author": "Nicolás Buitrago Castaño (nicbuitr)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicbuitr/StartDroneApp.git"
+  },
   "scripts": {
     "start": "meteor run"
   },
