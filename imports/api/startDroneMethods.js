@@ -289,17 +289,19 @@ if (Meteor.isServer) {
             let possibleZoneToUpdate = PossibleZones.findOne({ 'geometry.coordinates': [latlng.lng, latlng.lat] });
 
             if (possibleZoneToUpdate) {
-                PossibleZones.update(possibleZoneToUpdate._id, {
-                    $push:
-                    {
-                        pictures: {
-                            min_match_percentage: minMatchPctage,
-                            match_percentage: matchPctage,
-                            drone_id: droneID,
-                            base64image: img
+                if (!possibleZoneToUpdate.pictures.find( image => image.base64image === img)) {
+                    PossibleZones.update(possibleZoneToUpdate._id, {
+                        $push:
+                        {
+                            pictures: {
+                                min_match_percentage: minMatchPctage,
+                                match_percentage: matchPctage,
+                                drone_id: droneID,
+                                base64image: img
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
             else {
                 PossibleZones.insert({
