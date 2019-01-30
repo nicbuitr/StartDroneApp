@@ -14,10 +14,12 @@
 
 ### Video Demo
 
-<video width="320" height="240" controls>
-  <source src="docs/StartDroneApp.mp4" type="video/mp4">
-</video>
-
+<p align="center">
+    <a href="https://youtu.be/EWnYN-Ctb-0">
+        <img src="docs/StaticDrone.png" alt="Video Demo Thumbnail">
+    </a>
+</p>
+  
 ## Installation
 
 The web application can work without being connected to the Drone or MTC server as long as the checkboxes are not ticked, therefore their setup is optional.
