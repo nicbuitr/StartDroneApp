@@ -30,7 +30,7 @@ if (Meteor.isServer) {
             let res = new Promise(
                 function (resolve, reject) {
                     console.log('EXECUTING PYTHON');
-                    PythonShell.run(__meteor_bootstrap__.serverDir.split("\\").join("/").replace("/.meteor/local/build/programs/server", "") + pythonScriptPath + 'startDroneRoutine.py', options, function (error, result) {
+                    PythonShell.run(__meteor_bootstrap__.serverDir.split("\\").join("/").replace(/.meteor(\/(\w+))*\/server/g, "") + pythonScriptPath + 'startDroneRoutine.py', options, function (error, result) {
                         if (error) {
                             console.log('REJECTED ERROR');
                             console.log(error);
@@ -62,7 +62,7 @@ if (Meteor.isServer) {
             let res = new Promise(
                 function (resolve, reject) {
                     console.log('EXECUTING PYTHON');
-                    PythonShell.run(__meteor_bootstrap__.serverDir.split("\\").join("/").replace("/.meteor/local/build/programs/server", "") + pythonScriptPath + 'landDrone.py', options, function (error, result) {
+                    PythonShell.run(__meteor_bootstrap__.serverDir.split("\\").join("/").replace(/.meteor(\/(\w+))*\/server/g, "") + pythonScriptPath + 'landDrone.py', options, function (error, result) {
                         if (error) {
                             console.log('REJECTED ERROR');
                             console.log(error);
@@ -178,7 +178,7 @@ if (Meteor.isServer) {
             check(fileName, String);
             check(serverImageStorePath, String);
 
-            let base64ImageString = fs.readFileSync(__meteor_bootstrap__.serverDir.split("\\").join("/").replace("/.meteor/local/build/programs/server", "") + serverImageStorePath + fileName, 'base64');
+            let base64ImageString = fs.readFileSync(__meteor_bootstrap__.serverDir.split("\\").join("/").replace(/.meteor(\/(\w+))*\/server/g, "") + serverImageStorePath + fileName, 'base64');
 
             return base64ImageString;
         },
