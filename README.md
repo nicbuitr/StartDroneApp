@@ -15,7 +15,7 @@
 ### Video Demo
 
 <p align="center">
-    <a href="https://youtu.be/EWnYN-Ctb-0">
+    <a href="https://youtu.be/EWnYN-Ctb-0" target="_blank">
         <img src="docs/StaticDrone.png" alt="Video Demo Thumbnail">
     </a>
 </p>
