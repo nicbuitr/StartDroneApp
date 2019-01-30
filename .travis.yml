@@ -10,7 +10,7 @@ deploy:
     secure: liEgyb0JAv+HJOKQ5EI4sS584PRBtxOR/onltrWRf1BQd8ovisc39QKa5UcopgcdIZaKTQYX2ECwP6+wuhW5GXHqx9ZquPpP55izlz7W3RBhBz7DtlzB8nirmtDcEgAcAf0PMzEiQ6ReyDD+g9MRle4zaEzgoyoYKyo35k6xCmOxs4AvTuVndy90j1cbbIeHrc9Qr3oHB8f1cyBv7UjQMY1Kzw/xPSR5iaHpHvyQmjDYrFu7Z/Tiy+SfGXWCOAXrxYt7S9hvjB1epGlv5u7cyzUcXOHT9g9XF5f+PrvEurkrUJ6sGAwIq1+uIMi7DkxN32HnsuF7aJ8l2VQMjPHhZvQ4WgDTBPbQhMXEJF3DBsoqsmFNrKobHgkilbl6M1LEKPRuylbWAjvlaq/tHB1pxzrBXzNcbk4jNwwNgbSPOCmhi1e9LtO10qlWnqklJmq/38euYjQFuPz8OiRbbXZqry5/cKRDTajUjr6PKVdSf4ZxuUYWazW6K5KPekW8gRU+xUScHFNvPaaRwU/gPe9lb5G0ayOX+IgbpGWQ3+cLUqy0sREHnN39ml07E0Ss4NAm+eRSiimfZNTjNch3XR2+QTPOUlx/ptNTuzcj2B37W1nzrYkB4K8Be3fg0G9dL1Ea2K7A+NZmIYnmjsxAexNgVBllLzGbrBq/9eFS0qCYkME=
   app: startdronedpp
   on:
-    repo: nicbuitr/startdroneapp
+    repo: nicbuitr/StartDroneApp
 cache:
   directories:
   - node_modules
