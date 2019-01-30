@@ -12,6 +12,10 @@
 
 ### Demo: [StartDroneApp](https://StartDroneApp.herokuapp.com)
 
+- User: admin
+- Password: admin1234)
+- Demo works with up to 4 pictures as there are no more on the server.
+
 ### Video Demo
 
 <p align="center">
