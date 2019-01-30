@@ -10,10 +10,10 @@
 
 ## How To View:
 
-### Demo: [StartDroneApp](https://StartDroneApp.herokuapp.com)
+### Web App Demo: [StartDroneApp](https://StartDroneApp.herokuapp.com)
 
 - User: admin
-- Password: admin1234)
+- Password: admin1234
 - Demo works with up to 4 pictures as there are no more on the server.
 
 ### Video Demo
@@ -81,22 +81,22 @@ Once its deployed go to http://localhost:3000/
 3. Hit the "Start Drone" button.
 4. Enjoy the show.
 
-#### Using the Drone:
+### Using the Drone (Optional):
 
 To make the app work with the Drone:
 
 1. Turn the Drone ON.
-2. Connect to Drone's WiFi, it has to be from the device where Node.js server is running, as the interactions happens between Drone <-> Meteor's Node.js server.
+2. Connect to Drone's WiFi, it has to be from the device where Node.js server is running, as the interactions happen between Drone <-> Meteor's Node.js server.
 3. Place it somewhere safe for it to take off.
 4. Set up Web App's parameters as desired or leave them as default.
-5. Tick "Drone Connected to Server?" checkbox.
+5. Mark "Drone Connected to Server?" checkbox.
 6. Stand at a safe distance.
 7. Hit the "Start Drone" button.
 8. Enjoy the show and wait patiently until it is finished.
 
-### Using the MTC:
+### Using the MTC (Optional):
 
-Once the OpenMTC is installed on the server do the following:
+Once the OpenMTC is installed on the linux server do the following:
 1. Copy the "SmartIMZSeeking" folder located in this repo under "MTC" folder.
 2. Paste it at the "apps" folder of the OpenMTC directory e.g: "/home/openmtc/openmtc-ula/apps".
 3. Make sure both NSCL and GSCL are working properly by doing the following:
@@ -129,7 +129,7 @@ To make it work with the MTC:
        $ sudo python ./3_DroneSensor.py
 
 6. Set up Web App's parameters as desired or leave them as default.
-7. Update the IP at "MTC Container URL" to the one of your MTC server(Use ifconfig on terminal if on doubt), folders and port should be the same.
+7. Update the IP at "MTC Container URL" to the one of your MTC server (Use "ifconfig" on terminal if on doubt), folders and port should be the same.
 8. Tick "MTC & Scripts Running?" checkbox.
 9. Stand at a safe distance if using along with drone.
 10. Hit the "Start Drone" button.
